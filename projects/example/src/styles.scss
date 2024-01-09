@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans');
+
+$color-highlight: #4aabc9;
+
+html, body {
+  color: #444;
+  font-family: 'Open Sans', sans-serif;
+  background: $color-highlight;
+  background: linear-gradient(135deg, $color-highlight 0%,#7db9e8 100%);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
