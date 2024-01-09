@@ -48,6 +48,28 @@
         "reveal": "always",
         "panel": "new"
       }
+    },
+    {
+      "label": "build library",
+      "type": "shell",
+      "command": "ng build ngx-custom-modal",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "publish library",
+      "type": "shell",
+      "command": "npm publish dist/ngx-custom-modal",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
     }
   ]
 }

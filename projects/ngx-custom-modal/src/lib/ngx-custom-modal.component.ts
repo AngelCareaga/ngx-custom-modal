@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
-  Component, ContentChild,
+  Component,
+  ContentChild,
   ElementRef,
   HostListener,
   Input,
   Renderer2,
+  signal,
   TemplateRef,
-  ViewChild,
 } from '@angular/core';
 
 @Component({
@@ -27,8 +28,8 @@ export class NgxCustomModalComponent {
   @Input() closeOnOutsideClick = true;
 
   // Controls the visibility and animation of the modal
-  visible = false;
-  public visibleAnimate = false;
+  visible = signal<boolean>(false);
+  public visibleAnimate = signal<boolean>(false);
 
   constructor(
     private elementRef: ElementRef,
@@ -46,8 +47,8 @@ export class NgxCustomModalComponent {
    */
   open(): void {
     this.renderer.addClass(document.body, 'modal-open');
-    this.visible = true;
-    setTimeout(() => (this.visibleAnimate = true));
+    this.visible.set(true);
+    setTimeout(() => this.visibleAnimate.set(true));
   }
 
   /**
@@ -55,9 +56,9 @@ export class NgxCustomModalComponent {
    */
   close(): void {
     this.renderer.removeClass(document.body, 'modal-open');
-    this.visibleAnimate = false;
+    this.visibleAnimate.set(false);
     setTimeout(() => {
-      this.visible = false;
+      this.visible.set(false);
       this.changeDetectorRef.markForCheck();
     }, 200);
   }

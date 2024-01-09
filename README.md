@@ -24,7 +24,7 @@ npm install ngx-custom-modal
 
 - **Light**: No additional CSS/JS frameworks attached.
 - **[Bootstrap 3 & 4 CSS Compatible](#bootstrap)**: Ensures seamless integration with these versions of Bootstrap.
-- **Custom Modal Components**: 
+- **Custom Modal Components**:
   - Customizable modal headers, bodies, and footers for tailored UI design.
 - **[Modal Stacking Support](#nested-modal)**: Allows multiple modals to be opened and managed effectively.
 - **Lazy Inner Component Initialization**: Components within modals are initialized only as needed.
@@ -37,7 +37,6 @@ Minor:
 - Escape or button to close modal
 
 ## Usage
-
 
 ```
 imports: [
@@ -112,3 +111,64 @@ app.component.html
 </ngx-custom-modal>
 ```
 
+See [example source code](https://github.com/AngelCareaga/ngx-custom-modal/tree/main/projects/example) for more information.
+
+## Development Guidelines
+
+### Code Formatting
+
+This project uses [Prettier](https://prettier.io/) for code formatting. To ensure consistent code style, please format your code using Prettier before submitting any changes.
+
+To format the codebase, run the following command:
+
+```bash
+npm run format
+```
+
+This command will automatically format all files in the project according to the predefined Prettier configuration.
+
+**Why ng-template?**
+
+ng-template prevents the parent component from initializing the component. Only when the modal library finds it convenient the component will be initialize and visible to the user. Hence, it preserves the natural `ngOnInit()` and `ngOnDestroy()` that we expect.
+
+Similar libraries which make use of `<ng-content>` and its [content transclution strategy](https://scotch.io/tutorials/angular-2-transclusion-using-ng-content#toc-multi-slot-transclusion), do not prevent the component from initializing, but rather just hide it. The component was already initialized in the parent component.
+
+References:<br>
+https://angular.io/api/common/NgTemplateOutlet<br>
+https://blog.angular-university.io/angular-ng-template-ng-container-ngtemplateoutlet/<br>
+https://medium.com/claritydesignsystem/ng-content-the-hidden-docs-96a29d70d11b<br>
+https://netbasal.com/understanding-viewchildren-contentchildren-and-querylist-in-angular-896b0c689f6e<br>
+
+## Styles
+
+The library carries the minimum generic styles. Beautifying it is up to you.
+
+### Default styles
+
+You can find the demo copy-paste styles in [modal.css](https://github.com/AngelCareaga/ngx-custom-modal/blob/main/projects/example/src/assets/modal.css).
+
+### Bootstrap
+
+Bootstrap users require no additional CSS other than the Bootstrap library (either version 3 or 4).
+
+## API
+
+### ModalComponent
+
+| Name                | Type                                           | Description                                                                                  |
+| ------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| header              | @ContentChild('modalHeader'): TemplateRef<any> | Angular Template (`<ng-template>`) to use as header.                                         |
+| body                | @ContentChild('modalBody'): TemplateRef<any>   | Angular Template (`ng-template`) to use as body.                                             |
+| footer              | @ContentChild('modalFooter'): TemplateRef<any> | Angular Template (`ng-template`) to use as footer.                                           |
+| closeOnOutsideClick | @Input(): boolean = true                       | When set to `true` modal will close when a click is performed outside the modal container.   |
+| open                | () => void                                     | Opens the modal.                                                                             |
+| close               | () => void                                     | Closes the modal.                                                                            |
+| isTopMost           | () => boolean                                  | Returns true is the modal is the top most modal, or false if it is underneath another modal. |
+
+## Special Thanks
+
+This project, ngx-custom-modal, was inspired by and built upon the foundational work of [angular-custom-modal](https://github.com/zurfyx/angular-custom-modal), created by Gerard Rovira Sánchez. A special acknowledgment to [Stephen Paul](https://stackoverflow.com/users/1087131/stephen-paul) for his [initial Angular 2 Modal version](https://stackoverflow.com/a/40144809/2013580), which laid the groundwork for these modal dialog implementations in Angular.
+
+## License
+
+MIT © Angel Careaga

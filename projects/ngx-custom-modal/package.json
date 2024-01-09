@@ -1,6 +1,28 @@
 {
   "name": "ngx-custom-modal",
-  "version": "17.0.0-rc.1",
+  "description": "A custom Modal / Dialog (with inner component support) for Angular 17+ projects",
+  "author": {
+    "name": "Angel Careaga",
+    "email": "dev.angelcareaga@gmail.com",
+    "url": "angelcareaga.com"
+  },
+  "version": "17.0.0-rc.3",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AngelCareaga/ngx-custom-modal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AngelCareaga/ngx-custom-modal/issues"
+  },
+  "homepage": "https://github.com/AngelCareaga/ngx-custom-modal#readme",
+  "keywords": [
+    "modal",
+    "dialog",
+    "angular",
+    "typescript"
+  ],
+  "private": false,
   "peerDependencies": {
     "@angular/common": "^17.0.8",
     "@angular/core": "^17.0.8"
