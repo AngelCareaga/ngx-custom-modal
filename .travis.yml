@@ -19,7 +19,7 @@ script:
   - npm run test -- --watch=false --browsers=ChromeHeadless
 
 before_deploy:
-  - npm run build
+  - npm run build ngx-custom-modal
 
 deploy:
   provider: npm
