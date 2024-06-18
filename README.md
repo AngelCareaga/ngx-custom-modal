@@ -1,11 +1,22 @@
 # ngx-custom-modal
 
-[![npm Version](https://img.shields.io/npm/v/ngx-custom-modal.svg)](https://www.npmjs.com/package/ngx-custom-modal)
-[![Build Status](https://travis-ci.org/AngelCareaga/ngx-custom-modal.svg?branch=master)](https://travis-ci.org/AngelCareaga/ngx-custom-modal)
+[![npm Version (latest)](https://img.shields.io/npm/v/ngx-custom-modal.svg)](https://www.npmjs.com/package/ngx-custom-modal)
+[![Build Status (main)](https://app.travis-ci.com/AngelCareaga/ngx-custom-modal.svg?branch=main)](https://app.travis-ci.com/github/AngelCareaga/ngx-custom-modal?branch=main)
 
-> A custom Modal / Dialog (with inner component support) for Angular 17+ projects.
+[![npm Version (angular-17)](https://img.shields.io/npm/v/ngx-custom-modal/17.0.0.svg)](https://www.npmjs.com/package/ngx-custom-modal/v/17.0.0)
+[![Build Status (angular-17)](https://app.travis-ci.com/AngelCareaga/ngx-custom-modal.svg?branch=angular-17)](https://app.travis-ci.com/github/AngelCareaga/ngx-custom-modal?branch=angular-17)
+
+
+> A custom Modal / Dialog (with inner component support).
 
 It is an update, continuation and improvement of the modal concept [Angular Custom Modal](https://github.com/zurfyx/angular-custom-modal).
+
+## Angular compatibility
+
+| ngx-custom-modal | @angular |
+|------------------|----------|
+| 18.0.0           | ≥18.0.0  |
+| 17.0.0           | ≥17.0.0  |
 
 ## Demo
 
