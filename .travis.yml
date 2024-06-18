@@ -1,4 +1,5 @@
 language: node_js
+dist: focal  # o usa bionic para Ubuntu 18.04, focal para 20.04, jammy para 22.04
 node_js:
   - '18'
 
