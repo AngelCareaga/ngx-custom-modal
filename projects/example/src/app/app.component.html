@@ -17,7 +17,7 @@
       </button>
 
       <!-- Example 1: Component Inside Modal -->
-      <ngx-custom-modal #componentInsideModal>
+      <ngx-custom-modal #componentInsideModal [closeOnEscape]="false" [closeOnOutsideClick]="false">
         <ng-template #modalHeader><h2>Component inside modal</h2></ng-template>
         <ng-template #modalBody>
           <app-modal-content></app-modal-content>

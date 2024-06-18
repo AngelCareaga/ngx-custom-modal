@@ -6,10 +6,12 @@ import {
   ElementRef,
   HostListener,
   Input,
+  OnDestroy,
   Renderer2,
   signal,
   TemplateRef,
 } from '@angular/core';
+import { ModalOptions } from './modal-options.interface';
 
 @Component({
   selector: 'ngx-custom-modal',
@@ -18,8 +20,7 @@ import {
   templateUrl: './ngx-custom-modal.component.html',
   styleUrls: ['./ngx-custom-modal.component.scss'],
 })
-export class NgxCustomModalComponent {
-  // References to parts of the modal for content injection
+export class NgxCustomModalComponent implements OnDestroy {
   @ContentChild('modalHeader') header: TemplateRef<any> | null = null;
   @ContentChild('modalBody') body: TemplateRef<any> | null = null;
   @ContentChild('modalFooter') footer: TemplateRef<any> | null = null;
@@ -27,7 +28,18 @@ export class NgxCustomModalComponent {
   // Controls whether the modal closes when clicking outside of it
   @Input() closeOnOutsideClick = true;
 
-  // Controls the visibility and animation of the modal
+  // Controls whether the modal closes when pressing the escape key
+  @Input() closeOnEscape = true;
+
+  // Custom class to be added to the modal
+  @Input() customClass?: string;
+
+  // Option to hide the close button
+  @Input() hideCloseButton = false;
+
+  // Modal options
+  @Input() options: ModalOptions = {};
+
   visible = signal<boolean>(false);
   public visibleAnimate = signal<boolean>(false);
 
@@ -35,7 +47,8 @@ export class NgxCustomModalComponent {
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
     private renderer: Renderer2,
-  ) {}
+  ) {
+  }
 
   ngOnDestroy() {
     // Ensures the modal closes and cleans up resources when the component is destroyed
@@ -69,7 +82,8 @@ export class NgxCustomModalComponent {
    */
   @HostListener('click', ['$event'])
   onContainerClicked(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('modal') && this.isTopMost() && this.closeOnOutsideClick) {
+    const closeOnOutsideClick = this.options.closeOnOutsideClick ?? this.closeOnOutsideClick;
+    if ((event.target as HTMLElement).classList.contains('modal') && this.isTopMost() && closeOnOutsideClick) {
       this.close();
     }
   }
@@ -79,7 +93,8 @@ export class NgxCustomModalComponent {
    */
   @HostListener('document:keydown', ['$event'])
   onKeyDownHandler(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && this.isTopMost()) {
+    const closeOnEscape = this.options.closeOnEscape ?? this.closeOnEscape;
+    if (event.key === 'Escape' && this.isTopMost() && closeOnEscape) {
       this.close();
     }
   }
@@ -91,5 +106,23 @@ export class NgxCustomModalComponent {
    */
   isTopMost(): boolean {
     return !this.elementRef.nativeElement.querySelector(':scope app-modal > .modal');
+  }
+
+  /**
+   * Gets the custom class to be added to the modal.
+   *
+   * @returns {string} The custom class.
+   */
+  getCustomClass(): string {
+    return this.customClass ?? this.options.customClass ?? '';
+  }
+
+  /**
+   * Determines if the close button should be hidden.
+   *
+   * @returns {boolean} True if the close button should be hidden.
+   */
+  shouldHideCloseButton(): boolean {
+    return this.hideCloseButton || this.options.hideCloseButton || false;
   }
 }

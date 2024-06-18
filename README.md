@@ -15,7 +15,6 @@ For a live demonstration, visit [ngx-custom-modal demo](https://AngelCareaga.git
 
 ```bash
 npm install ngx-custom-modal
-
 ```
 
 ## Features
@@ -44,15 +43,13 @@ imports: [
   NgxCustomModalComponent,
   ...
 ],
-...
-})
 ```
 
 ### Raw HTML
 
 app.component.html
 
-```
+```html
 <button (click)="htmlInsideModal.open()">Raw HTML inside modal</button>
 <ngx-custom-modal #htmlInsideModal>
   <ng-template #modalHeader><h2>HTML inside modal</h2></ng-template>
@@ -66,7 +63,7 @@ app.component.html
 
 my-component.component.ts
 
-```
+```html
 @Component({
   selector: 'app-my-component',
   templateUrl: 'my-component.component.html',
@@ -76,13 +73,13 @@ export class AppModalContentComponent { }
 
 my-component.component.html
 
-```
+```html
 <p>My component's HTML</p>
 ```
 
 app.component.html
 
-```
+```html
 <button (click)="componentInsideModal.open()">Component inside modal</button>
 <ngx-custom-modal #componentInsideModal>
   <ng-template #modalHeader><h2>Component inside modal</h2></ng-template>
@@ -97,7 +94,7 @@ app.component.html
 
 app.component.html
 
-```
+```html
 <ngx-custom-modal #nestedModal>
   <ng-template #modalHeader><h2>Nested modal</h2></ng-template>
   <ng-template #modalBody>
@@ -107,6 +104,23 @@ app.component.html
     <ngx-custom-modal #nestedModalX>
       <ng-template #modalBody>This is the nested modal content.</ng-template>
     </ngx-custom-modal>
+  </ng-template>
+</ngx-custom-modal>
+```
+
+## Custom Classes and Options
+
+You can now apply custom CSS classes, use an `options` object for flexible configuration, and hide the close button.
+
+### Custom CSS Classes
+
+To apply custom CSS classes to the modal:
+
+```html
+<ngx-custom-modal #customClassModal customClass="my-custom-class">
+  <ng-template #modalHeader><h2>Custom Class Modal</h2></ng-template>
+  <ng-template #modalBody>
+    <p>This modal has a custom CSS class.</p>
   </ng-template>
 </ngx-custom-modal>
 ```
@@ -156,11 +170,15 @@ Bootstrap users require no additional CSS other than the Bootstrap library (eith
 ### ModalComponent
 
 | Name                | Type                                           | Description                                                                                  |
-| ------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
+|---------------------| ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | header              | @ContentChild('modalHeader'): TemplateRef<any> | Angular Template (`<ng-template>`) to use as header.                                         |
 | body                | @ContentChild('modalBody'): TemplateRef<any>   | Angular Template (`ng-template`) to use as body.                                             |
 | footer              | @ContentChild('modalFooter'): TemplateRef<any> | Angular Template (`ng-template`) to use as footer.                                           |
 | closeOnOutsideClick | @Input(): boolean = true                       | When set to `true` modal will close when a click is performed outside the modal container.   |
+| closeOnEscape       | @Input(): boolean = true                       | When set to `true` modal will close when the `ESC` key is pressed.                           |
+| customClass         | @Input(): string                               | Custom class to be added to the modal container.                                             |
+| hideCloseButton     | @Input(): boolean = false                      | When set to `true` the close button will be hidden.                                          |
+| options             | @Input(): ModalOptions                         | Options to customize the modal.                                                              |
 | open                | () => void                                     | Opens the modal.                                                                             |
 | close               | () => void                                     | Closes the modal.                                                                            |
 | isTopMost           | () => boolean                                  | Returns true is the modal is the top most modal, or false if it is underneath another modal. |

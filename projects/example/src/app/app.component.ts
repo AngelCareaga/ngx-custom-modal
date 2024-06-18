@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NgxCustomModalComponent } from '../../../ngx-custom-modal/src/public-api';
@@ -16,7 +16,7 @@ const MODAL_CSS: string[] = [
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'example';
 
   @ViewChild('componentInsideModal') componentInsideModal: NgxCustomModalComponent | null = null;
