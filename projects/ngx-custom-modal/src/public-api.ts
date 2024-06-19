@@ -1,2 +1,2 @@
 export { NgxCustomModalComponent } from './lib/ngx-custom-modal.component';
-export * from './lib/modal-options.interface';
+export { ModalOptions } from './lib/modal-options.interface';
