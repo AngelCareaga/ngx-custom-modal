@@ -13,13 +13,7 @@ const MODAL_CSS: string[] = [
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        RouterTestingModule,
-        NgxCustomModalComponent,
-        ModalContentComponent,
-        AppComponent
-      ],
+      imports: [CommonModule, RouterTestingModule, NgxCustomModalComponent, ModalContentComponent, AppComponent],
     }).compileComponents();
   });
 

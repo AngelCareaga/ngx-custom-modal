@@ -1,5 +1,5 @@
 language: node_js
-dist: focal  # o usa bionic para Ubuntu 18.04, focal para 20.04, jammy para 22.04
+dist: focal # o usa bionic para Ubuntu 18.04, focal para 20.04, jammy para 22.04
 node_js:
   - '18'
 
@@ -23,7 +23,7 @@ before_deploy:
 
 deploy:
   provider: npm
-  email: "soyangelcareaga@gmail.com"
+  email: 'soyangelcareaga@gmail.com'
   api_key: $NPM_API_KEY
   on:
     branch: main

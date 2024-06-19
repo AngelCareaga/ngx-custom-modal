@@ -47,8 +47,7 @@ export class NgxCustomModalComponent implements OnDestroy {
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
     private renderer: Renderer2,
-  ) {
-  }
+  ) {}
 
   ngOnDestroy() {
     // Ensures the modal closes and cleans up resources when the component is destroyed

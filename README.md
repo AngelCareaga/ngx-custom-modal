@@ -6,7 +6,6 @@
 [![npm Version (angular-17)](https://img.shields.io/npm/v/ngx-custom-modal/17.0.0.svg)](https://www.npmjs.com/package/ngx-custom-modal/v/17.0.0)
 [![Build Status (angular-17)](https://app.travis-ci.com/AngelCareaga/ngx-custom-modal.svg?branch=angular-17)](https://app.travis-ci.com/github/AngelCareaga/ngx-custom-modal?branch=angular-17)
 
-
 > A custom Modal / Dialog (with inner component support).
 
 It is an update, continuation and improvement of the modal concept [Angular Custom Modal](https://github.com/zurfyx/angular-custom-modal).
@@ -14,9 +13,9 @@ It is an update, continuation and improvement of the modal concept [Angular Cust
 ## Angular compatibility
 
 | ngx-custom-modal | @angular |
-|------------------|----------|
-| 18.0.0           | ≥18.0.0  |
-| 17.0.0           | ≥17.0.0  |
+| ---------------- | -------- |
+| 18.0.1           | ≥18.0.0  |
+| 17.0.1           | ≥17.0.0  |
 
 ## Demo
 
@@ -75,11 +74,8 @@ app.component.html
 my-component.component.ts
 
 ```html
-@Component({
-selector: 'app-my-component',
-templateUrl: 'my-component.component.html',
-})
-export class AppModalContentComponent { }
+@Component({ selector: 'app-my-component', templateUrl: 'my-component.component.html', }) export class
+AppModalContentComponent { }
 ```
 
 my-component.component.html
@@ -109,8 +105,7 @@ app.component.html
 <ngx-custom-modal #nestedModal>
   <ng-template #modalHeader><h2>Nested modal</h2></ng-template>
   <ng-template #modalBody>
-    Nested modals can be created by simply adding a &lt;modal&gt; inside a &lt;modal&gt;
-    ...
+    Nested modals can be created by simply adding a &lt;modal&gt; inside a &lt;modal&gt; ...
     <button (click)="nestedModalX.open()">Open nested modal</button>
     <ngx-custom-modal #nestedModalX>
       <ng-template #modalBody>This is the nested modal content.</ng-template>
@@ -181,7 +176,7 @@ Bootstrap users require no additional CSS other than the Bootstrap library (eith
 ### ModalComponent
 
 | Name                | Type                                           | Description                                                                                  |
-|---------------------| ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| ------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | header              | @ContentChild('modalHeader'): TemplateRef<any> | Angular Template (`<ng-template>`) to use as header.                                         |
 | body                | @ContentChild('modalBody'): TemplateRef<any>   | Angular Template (`ng-template`) to use as body.                                             |
 | footer              | @ContentChild('modalFooter'): TemplateRef<any> | Angular Template (`ng-template`) to use as footer.                                           |
