@@ -1,6 +1,6 @@
 {
   "name": "ngx-custom-modal",
-  "description": "A custom Modal / Dialog (with inner component support) for Angular 17+ projects",
+  "description": "A custom Modal / Dialog (with inner component support) for Angular projects",
   "author": {
     "name": "Angel Careaga",
     "email": "dev.angelcareaga@gmail.com",

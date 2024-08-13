@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -16,7 +16,7 @@ import { ModalOptions } from './modal-options.interface';
 @Component({
   selector: 'ngx-custom-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [NgClass, NgTemplateOutlet],
   templateUrl: './ngx-custom-modal.component.html',
   styleUrls: ['./ngx-custom-modal.component.scss'],
 })
@@ -47,7 +47,8 @@ export class NgxCustomModalComponent implements OnDestroy {
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
     private renderer: Renderer2,
-  ) {}
+  ) {
+  }
 
   ngOnDestroy() {
     // Ensures the modal closes and cleans up resources when the component is destroyed
