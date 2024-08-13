@@ -6,7 +6,7 @@
     "email": "dev.angelcareaga@gmail.com",
     "url": "angelcareaga.com"
   },
-  "version": "18.0.1",
+  "version": "18.0.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -24,8 +24,11 @@
   ],
   "private": false,
   "peerDependencies": {
-    "@angular/common": "^17.3.11",
-    "@angular/core": "^17.3.11"
+    "@angular/common": "^18.1.4",
+    "@angular/core": "^18.1.4"
+  },
+  "dependencies": {
+    "tslib": "^2.6.3"
   },
   "sideEffects": false
 }

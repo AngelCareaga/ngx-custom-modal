@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+projects/ngx-custom-modal/node_modules/
+
+projects/ngx-custom-modal/pnpm-lock.yaml
+
+pnpm-lock.yaml
