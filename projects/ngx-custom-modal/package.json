@@ -8,6 +8,14 @@
   },
   "version": "18.0.2",
   "license": "MIT",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "format": "prettier --write ."
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AngelCareaga/ngx-custom-modal.git"
@@ -17,18 +25,21 @@
   },
   "homepage": "https://github.com/AngelCareaga/ngx-custom-modal#readme",
   "keywords": [
+    "angular",
+    "typescript",
     "modal",
     "dialog",
-    "angular",
-    "typescript"
+    "component",
+    "bootstrap",
+    "ui"
   ],
   "private": false,
   "peerDependencies": {
-    "@angular/common": "^18.1.4",
-    "@angular/core": "^18.1.4"
+    "@angular/common": ">=17.0.0 <21.0.0",
+    "@angular/core": ">=17.0.0 <21.0.0"
   },
   "dependencies": {
-    "tslib": "^2.6.3"
+    "tslib": "^2.3.0"
   },
   "sideEffects": false
 }

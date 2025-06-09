@@ -4,14 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <ng-container *ngTemplateOutlet="header"></ng-container>
-          <button
-            *ngIf="!shouldHideCloseButton()"
-            class="close"
-            data-dismiss="modal"
-            type="button"
-            aria-label="Close"
-            (click)="close()"
-          >
+          <button *ngIf="!shouldHideCloseButton()" class="close" data-dismiss="modal" type="button" aria-label="Close" (click)="close()">
             ×
           </button>
         </div>

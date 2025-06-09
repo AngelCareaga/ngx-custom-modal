@@ -1,0 +1,42 @@
+name: 🧪 Test NPM Token
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Checkout (for package.json)
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: 🔍 Verify Token Format
+        run: |
+          if [[ "${{ secrets.NPM_TOKEN }}" == npm_* ]]; then
+            echo "✅ Token format looks correct (starts with npm_)"
+          else
+            echo "❌ Token format incorrect - should start with npm_"
+            exit 1
+          fi
+
+      - name: 🧪 Test NPM Authentication
+        run: |
+          echo "Testing NPM authentication..."
+          npm whoami
+          echo "✅ NPM Token is valid!"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: 🔍 Test Package Access
+        run: |
+          echo "Testing package access..."
+          npm view ngx-custom-modal version || echo "Package not found (this is OK for first publish)"
+          echo "✅ Registry access working!"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

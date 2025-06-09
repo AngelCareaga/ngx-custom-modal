@@ -1,0 +1,28 @@
+# Global ownership
+* @AngelCareaga
+
+# Package management
+package.json @AngelCareaga
+package-lock.json @AngelCareaga
+pnpm-lock.yaml @AngelCareaga
+projects/ngx-custom-modal/package.json @AngelCareaga
+
+# CI/CD workflows
+.github/ @AngelCareaga
+
+# Core library files
+projects/ngx-custom-modal/src/ @AngelCareaga
+
+# Documentation
+README.md @AngelCareaga
+*.md @AngelCareaga
+
+# Configuration files
+*.json @AngelCareaga
+*.js @AngelCareaga
+*.ts @AngelCareaga
+
+# Release and build files
+scripts/ @AngelCareaga
+angular.json @AngelCareaga
+tsconfig*.json @AngelCareaga

@@ -1,0 +1,219 @@
+/**
+ * Custom Modal Styles - Tailwind Compatible
+ * These styles are injected dynamically and work alongside Tailwind
+ */
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Modal backdrop */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  padding: 1rem;
+}
+
+.modal.in {
+  opacity: 1;
+}
+
+/* Modal dialog container */
+.modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+/* Modal content */
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.75rem;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  outline: 0;
+  max-height: calc(100vh - 2rem);
+  overflow: hidden;
+}
+
+/* Dark mode support */
+.dark .modal-content {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+/* Modal header */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+.dark .modal-header {
+  border-bottom-color: #374151;
+}
+
+.modal-header h2,
+.modal-header h3,
+.modal-header h4 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dark .modal-header h2,
+.dark .modal-header h3,
+.dark .modal-header h4 {
+  color: #f9fafb;
+}
+
+/* Modal body */
+.modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+/* Modal footer */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
+.dark .modal-footer {
+  border-top-color: #374151;
+}
+
+/* Close button */
+.modal-header .close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin: -0.5rem -0.5rem -0.5rem auto;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.modal-header .close:hover {
+  color: #111827;
+  background-color: #f3f4f6;
+  transform: scale(1.05);
+}
+
+.dark .modal-header .close {
+  color: #9ca3af;
+}
+
+.dark .modal-header .close:hover {
+  color: #f9fafb;
+  background-color: #374151;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .modal {
+    padding: 0.5rem;
+  }
+
+  .modal-content {
+    max-height: calc(100vh - 1rem);
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 1rem;
+  }
+
+  .modal-body {
+    max-height: calc(100vh - 150px);
+  }
+}
+
+/* Animation for nested modals */
+.modal .modal {
+  z-index: 1055;
+}
+
+.modal .modal .modal-content {
+  transform: scale(0.95);
+  animation: modalScale 0.3s ease-out forwards;
+}
+
+@keyframes modalScale {
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Custom modal classes */
+.custom-modal .modal-content {
+  border: 2px solid #6366f1;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.custom-modal .modal-header {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border-bottom: none;
+}
+
+.custom-modal .modal-header h2,
+.custom-modal .modal-header h3,
+.custom-modal .modal-header h4 {
+  color: white;
+}
+
+.custom-modal .modal-header .close {
+  color: white;
+}
+
+.custom-modal .modal-header .close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}

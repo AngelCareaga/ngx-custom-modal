@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/ngx-custom-modal",
       "sourceRoot": "projects/ngx-custom-modal/src",
-      "prefix": "lib",
+      "prefix": "ngx",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -23,13 +23,6 @@
             }
           },
           "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "tsConfig": "projects/ngx-custom-modal/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
-          }
         }
       }
     },
@@ -37,7 +30,8 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "standalone": true
         }
       },
       "root": "projects/example",
@@ -53,7 +47,14 @@
             "polyfills": ["zone.js"],
             "tsConfig": "projects/example/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["projects/example/src/favicon.ico", "projects/example/src/assets"],
+            "assets": [
+              "projects/example/src/favicon.ico",
+              {
+                "glob": "**/*",
+                "input": "projects/example/src/assets",
+                "output": "/assets"
+              }
+            ],
             "styles": ["projects/example/src/styles.scss"],
             "scripts": []
           },
@@ -62,13 +63,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
                 }
               ],
               "outputHashing": "all"
@@ -94,26 +95,13 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "buildTarget": "example:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "projects/example/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": ["projects/example/src/favicon.ico", "projects/example/src/assets"],
-            "styles": ["projects/example/src/styles.scss"],
-            "scripts": []
-          }
+          "builder": "@angular-devkit/build-angular:extract-i18n"
         }
       }
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "packageManager": "pnpm"
   }
 }

@@ -46,7 +46,7 @@ export class NgxCustomModalComponent implements OnDestroy {
   constructor(
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
-    private renderer: Renderer2,
+    private renderer: Renderer2
   ) {}
 
   ngOnDestroy() {

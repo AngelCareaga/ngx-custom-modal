@@ -1,0 +1,19 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+
+# --- TIPOS ---
+# feat:     nueva funcionalidad
+# fix:      corrección de bug
+# docs:     documentación
+# style:    formateo, sin cambios de código
+# refactor: refactoring de código
+# test:     agregar tests
+# chore:    mantenimiento
+
+# --- EJEMPLOS ---
+# feat(modal): add support for custom animations
+# fix(validation): resolve modal closing issue
+# docs(readme): update installation instructions
