@@ -46,8 +46,13 @@ jobs:
       - name: 🏷️ Bump version & Sync library version
         id: version
         run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
           if [ "${{ inputs.prerelease }}" = "true" ]; then
-            NEW_VERSION=$(npm version pre${{ inputs.release_type }} --preid=rc --no-git-tag-version | sed 's/v//')
+            if [[ "${CURRENT_VERSION}" == *-* ]]; then
+              NEW_VERSION=$(npm version prerelease --preid=rc --no-git-tag-version | sed 's/v//')
+            else
+              NEW_VERSION=$(npm version pre${{ inputs.release_type }} --preid=rc --no-git-tag-version | sed 's/v//')
+            fi
           else
             NEW_VERSION=$(npm version ${{ inputs.release_type }} --no-git-tag-version | sed 's/v//')
           fi

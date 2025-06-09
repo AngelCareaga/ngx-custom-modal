@@ -1,9 +1,5 @@
-// ./projects/ngx-custom-modal/src/lib/ngx-custom-modal.component.ts
-
 import { CommonModule } from '@angular/common';
 import {
-  afterNextRender,
-  afterEveryRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -23,6 +19,7 @@ import {
 } from '@angular/core';
 import { ModalOptions, ModalState } from './modal-options.interface';
 import { NgxModalStackService } from './ngx-modal-stack.service';
+import { LifecycleCompatibilityService } from './compatibility/lifecycle-compatibility.service';
 
 /**
  * A feature-rich, accessible modal component for Angular 17+ applications.
@@ -34,6 +31,7 @@ import { NgxModalStackService } from './ngx-modal-stack.service';
  * - Bootstrap 3, 4 & 5 compatibility
  * - Touch-optimized for mobile devices
  * - Customizable animations and styling
+ * - Cross-version compatibility (Angular 17-20+)
  *
  * @example
  * ```html
@@ -60,6 +58,7 @@ import { NgxModalStackService } from './ngx-modal-stack.service';
 export class NgxCustomModalComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private document = inject(Document, { optional: true });
+  private lifecycleService = inject(LifecycleCompatibilityService);
 
   @ViewChild('modalDialog', { static: false }) modalDialog!: ElementRef<HTMLDialogElement>;
 
@@ -147,6 +146,8 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
 
   private previouslyFocusedElement: HTMLElement | null = null;
   private modalStackService = inject(NgxModalStackService, { optional: true });
+  private afterRenderCleanup: (() => void) | null = null;
+  private afterNextRenderCleanup: (() => void) | null = null;
 
   constructor() {
     // Effect to handle modal visibility changes
@@ -166,23 +167,13 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
       this.updateCSSAnimationDuration(duration);
     });
 
-    // Setup after render hooks
-    afterNextRender(() => {
-      this.setupAccessibility();
-      this.setupKeyboardNavigation();
-      this.setupFocusManagement();
-    });
-
-    afterEveryRender(() => {
-      if (this.visible() && this.modalDialog) {
-        this.adjustModalPosition();
-        this.ensureProperZIndex();
-      }
-    });
+    // Setup lifecycle hooks with compatibility
+    this.setupLifecycleHooks();
   }
 
   ngOnInit(): void {
     this.registerInModalStack();
+    this.logVersionInfo();
   }
 
   ngOnDestroy(): void {
@@ -190,6 +181,7 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
     this.unregisterFromModalStack();
     this.restoreFocus();
     this.removeBodyClass();
+    this.cleanupLifecycleHooks();
   }
 
   /**
@@ -408,6 +400,55 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
    */
   hasFooterContent(): boolean {
     return !!this.footer;
+  }
+
+  /**
+   * Sets up lifecycle hooks with version compatibility.
+   * @private
+   */
+  private setupLifecycleHooks(): void {
+    // Setup afterNextRender for initial setup
+    this.afterNextRenderCleanup = this.lifecycleService.afterNextRender(() => {
+      this.setupAccessibility();
+      this.setupKeyboardNavigation();
+      this.setupFocusManagement();
+    });
+
+    // Setup afterEveryRender for ongoing updates
+    this.afterRenderCleanup = this.lifecycleService.afterEveryRender(() => {
+      if (this.visible() && this.modalDialog) {
+        this.adjustModalPosition();
+        this.ensureProperZIndex();
+      }
+    });
+  }
+
+  /**
+   * Cleans up lifecycle hook subscriptions.
+   * @private
+   */
+  private cleanupLifecycleHooks(): void {
+    if (this.afterRenderCleanup) {
+      this.afterRenderCleanup();
+      this.afterRenderCleanup = null;
+    }
+    if (this.afterNextRenderCleanup) {
+      this.afterNextRenderCleanup();
+      this.afterNextRenderCleanup = null;
+    }
+  }
+
+  /**
+   * Logs version information for debugging.
+   * @private
+   */
+  private logVersionInfo(): void {
+    const versionInfo = this.lifecycleService.getVersionInfo();
+    console.log(`[NgxCustomModal] Angular ${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}`);
+    console.log(`[NgxCustomModal] Using lifecycle hook: ${versionInfo.hookName}`);
+    console.log(
+      `[NgxCustomModal] Hooks available - afterRender: ${versionInfo.hasAfterRender}, afterNextRender: ${versionInfo.hasAfterNextRender}`
+    );
   }
 
   /**
