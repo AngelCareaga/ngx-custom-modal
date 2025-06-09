@@ -3,7 +3,7 @@
 import { CommonModule } from '@angular/common';
 import {
   afterNextRender,
-  afterRender,
+  afterEveryRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -173,7 +173,7 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
       this.setupFocusManagement();
     });
 
-    afterRender(() => {
+    afterEveryRender(() => {
       if (this.visible() && this.modalDialog) {
         this.adjustModalPosition();
         this.ensureProperZIndex();

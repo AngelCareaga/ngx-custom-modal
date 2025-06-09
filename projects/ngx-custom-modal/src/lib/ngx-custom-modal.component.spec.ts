@@ -1,5 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { ModalStackService, NgxCustomModalComponent } from './ngx-custom-modal.component';
+import { NgxCustomModalComponent } from './ngx-custom-modal.component';
+import { NgxModalStackService } from './ngx-modal-stack.service';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -39,19 +40,19 @@ describe('NgxCustomModalComponent', () => {
   let component: NgxCustomModalComponent;
   let hostComponent: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
-  let modalStackService: ModalStackService;
+  let modalStackService: NgxModalStackService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CommonModule, NgxCustomModalComponent],
       declarations: [TestHostComponent],
-      providers: [ModalStackService],
+      providers: [NgxModalStackService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);
     hostComponent = fixture.componentInstance;
     component = hostComponent.modal;
-    modalStackService = TestBed.inject(ModalStackService);
+    modalStackService = TestBed.inject(NgxModalStackService);
 
     fixture.detectChanges();
   });
@@ -324,17 +325,17 @@ describe('NgxCustomModalComponent', () => {
   }));
 });
 
-describe('ModalStackService', () => {
-  let service: ModalStackService;
+describe('NgxModalStackService', () => {
+  let service: NgxModalStackService;
   let modal1: NgxCustomModalComponent;
   let modal2: NgxCustomModalComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ModalStackService],
+      providers: [NgxModalStackService],
     });
 
-    service = TestBed.inject(ModalStackService);
+    service = TestBed.inject(NgxModalStackService);
     modal1 = new NgxCustomModalComponent();
     modal2 = new NgxCustomModalComponent();
   });
