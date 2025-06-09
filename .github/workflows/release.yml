@@ -43,7 +43,7 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
-      - name: 🏷️ Bump version & Remove "v" prefix
+      - name: 🏷️ Bump version & Sync library version
         id: version
         run: |
           if [ "${{ inputs.prerelease }}" = "true" ]; then
@@ -52,7 +52,7 @@ jobs:
             NEW_VERSION=$(npm version ${{ inputs.release_type }} --no-git-tag-version | sed 's/v//')
           fi
           echo "new-version=${NEW_VERSION}" >> $GITHUB_OUTPUT
-          echo "Nueva versión limpia (sin v): ${NEW_VERSION}"
+          node -e "let pkg = require('./projects/ngx-custom-modal/package.json'); pkg.version = '${NEW_VERSION}'; require('fs').writeFileSync('./projects/ngx-custom-modal/package.json', JSON.stringify(pkg, null, 2));"
 
       - name: 🏗️ Build library
         run: npm run build:lib
