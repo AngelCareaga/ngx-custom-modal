@@ -1,25 +1,237 @@
-/**
- * A more specific selector overwrites bootstrap display properties, but they still enable users
- * to overwrite them on their apps.
- */
+/* ./projects/ngx-custom-modal/src/lib/ngx-custom-modal.component.scss */
 
-:host ::ng-deep modal .modal {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
+/* ==========================================================================
+   NGX Custom Modal Component Styles
+
+   Features:
+   - CSS custom properties for easy theming
+   - Bootstrap 3, 4 & 5 compatibility
+   - Dark mode support with prefers-color-scheme
+   - Reduced motion support for accessibility
+   - Mobile-optimized responsive design
+   - Modern flexbox layout with backdrop blur effects
+   ========================================================================== */
+
+/* Host element setup - uses display: contents to avoid layout issues */
+:host {
+  display: contents;
 }
 
+/* ==========================================================================
+   Modal Backdrop & Container
+   ========================================================================== */
 :host ::ng-deep .modal {
+  /* Fixed positioning for full-screen overlay */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   min-height: 100%;
+
+  /* Backdrop styling with modern blur effect */
   background-color: rgba(0, 0, 0, 0.15);
-  z-index: 42;
+  backdrop-filter: blur(2px);
+
+  /* Flexbox centering for responsive modal positioning */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Z-index and smooth animation setup */
+  z-index: 1050;
+  opacity: 0;
+  transition: opacity var(--modal-animation-duration, 200ms) ease-in-out;
 }
 
+/* Visible state with opacity transition for smooth appearance */
 :host ::ng-deep .modal.in {
   opacity: 1;
+}
+
+/* ==========================================================================
+   Modal Dialog Container
+   ========================================================================== */
+:host ::ng-deep .modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: none; /* Allows backdrop clicks to pass through */
+
+  /* Scale animation for smooth entrance effect */
+  transform: scale(0.9);
+  transition: transform var(--modal-animation-duration, 200ms) ease-in-out;
+}
+
+/* Dialog scale animation when modal becomes visible */
+:host ::ng-deep .modal.in .modal-dialog {
+  transform: scale(1);
+}
+
+/* ==========================================================================
+   Modal Content Container
+   ========================================================================== */
+:host ::ng-deep .modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto; /* Re-enable pointer events for modal content */
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  outline: 0;
+}
+
+/* ==========================================================================
+   Modal Header Section
+   ========================================================================== */
+:host ::ng-deep .modal-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: calc(0.5rem - 1px);
+  border-top-right-radius: calc(0.5rem - 1px);
+}
+
+/* ==========================================================================
+   Modal Body Section
+   ========================================================================== */
+:host ::ng-deep .modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1rem;
+}
+
+/* ==========================================================================
+   Modal Footer Section
+   ========================================================================== */
+:host ::ng-deep .modal-footer {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  border-top: 1px solid #dee2e6;
+  border-bottom-right-radius: calc(0.5rem - 1px);
+  border-bottom-left-radius: calc(0.5rem - 1px);
+}
+
+/* ==========================================================================
+   Close Button Styling
+   ========================================================================== */
+:host ::ng-deep .close {
+  padding: 0.25rem 0.25rem;
+  margin: -0.25rem -0.25rem -0.25rem auto;
+  background: transparent;
+  border: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.15s ease-in-out;
+}
+
+:host ::ng-deep .close:hover {
+  color: #000;
+  text-decoration: none;
+  opacity: 0.75;
+}
+
+:host ::ng-deep .close:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Modal Layout Variants
+   ========================================================================== */
+
+/* Centered modal positioning */
+:host ::ng-deep .modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
+}
+
+/* Scrollable modal body */
+:host ::ng-deep .modal-dialog-scrollable {
+  height: calc(100% - 1rem);
+}
+
+:host ::ng-deep .modal-dialog-scrollable .modal-content {
+  max-height: 100%;
+  overflow: hidden;
+}
+
+:host ::ng-deep .modal-dialog-scrollable .modal-body {
+  overflow-y: auto;
+}
+
+/* ==========================================================================
+   Size Variants
+   ========================================================================== */
+
+/* Small modal - suitable for simple confirmations */
+:host ::ng-deep .modal-sm {
+  max-width: 300px;
+}
+
+/* Large modal - suitable for forms and detailed content */
+:host ::ng-deep .modal-lg {
+  max-width: 800px;
+}
+
+/* Extra large modal - suitable for complex layouts */
+:host ::ng-deep .modal-xl {
+  max-width: 1140px;
+}
+
+/* ==========================================================================
+   Accessibility Features
+   ========================================================================== */
+
+/* Reduced motion support for users with vestibular disorders */
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep .modal {
+    transition: none;
+  }
+
+  :host ::ng-deep .modal-dialog {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Dark Mode Support
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :host ::ng-deep .modal {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  :host ::ng-deep .modal-content {
+    background-color: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+  }
+
+  :host ::ng-deep .modal-header,
+  :host ::ng-deep .modal-footer {
+    border-color: #374151;
+  }
+
+  :host ::ng-deep .close {
+    color: #f9fafb;
+    text-shadow: 0 1px 0 #000;
+  }
 }

@@ -5,11 +5,11 @@
 [![npm Version](https://img.shields.io/npm/v/ngx-custom-modal.svg)](https://www.npmjs.com/package/ngx-custom-modal)
 [![Build Status](https://github.com/AngelCareaga/ngx-custom-modal/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/AngelCareaga/ngx-custom-modal/actions)
 [![GitHub Stars](https://img.shields.io/github/stars/AngelCareaga/ngx-custom-modal?style=social)](https://github.com/AngelCareaga/ngx-custom-modal/stargazers)
-[![Angular](https://img.shields.io/badge/Angular-17--20-red.svg)](https://angular.io/)
+[![Angular](https://img.shields.io/badge/Angular-17+-red.svg)](https://angular.io/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-**A lightweight Angular modal component with full standalone support**
+**A lightweight Angular modal component with signal-based reactivity and full standalone support**
 
 [Live Examples](https://angelcareaga.github.io/ngx-custom-modal/) • [Documentation](https://github.com/AngelCareaga/ngx-custom-modal#readme) • [Report Bug](https://github.com/AngelCareaga/ngx-custom-modal/issues)
 
@@ -17,15 +17,17 @@
 
 ## ✨ Features
 
-- 🎯 **Angular Native** - Built specifically for Angular 17-20
+- 🎯 **Angular Native** - Built specifically for Angular 17+
 - 🎭 **Standalone Components** - No NgModule required
-- 🔗 **Nested Modals** - Full support for modal stacking
-- 🎨 **Bootstrap Compatible** - Works seamlessly with Bootstrap 3 & 4
+- 🚀 **Signal-Based Reactivity** - Optimized performance with Angular signals
+- 🔗 **Advanced Modal Stacking** - Intelligent z-index management and focus trapping
+- 🎨 **Bootstrap 3, 4 & 5 Compatible** - Seamless integration with all Bootstrap versions
 - 📱 **Mobile Friendly** - Touch-optimized for mobile devices
-- ⚡ **Lightweight** - Minimal bundle impact
+- ⚡ **Lightweight** - Minimal bundle impact with performance optimization
 - 🔧 **TypeScript** - Full type safety and IntelliSense
 - 🎪 **Custom Content** - Support for components and HTML templates
 - 🎛️ **Configurable** - Extensive customization options
+- ♿ **WCAG Compliant** - Full accessibility support with screen reader compatibility
 
 ## 🚀 Quick Start
 
@@ -64,6 +66,70 @@ import { NgxCustomModalComponent } from 'ngx-custom-modal';
 export class ExampleComponent {}
 ```
 
+### Usage with Angular 17 Features
+
+```typescript
+import { Component, signal } from '@angular/core';
+import { NgxCustomModalComponent, ModalOptions } from 'ngx-custom-modal';
+
+@Component({
+  selector: 'app-signal-example',
+  standalone: true,
+  imports: [NgxCustomModalComponent],
+  template: `
+    <button (click)="modal.open()">Open Signal Modal</button>
+
+    <ngx-custom-modal
+      #modal
+      [size]="modalSize()"
+      [options]="modalOptions()"
+      (opened)="onModalOpened()"
+      (closed)="onModalClosed()"
+    >
+      <ng-template #modalHeader>
+        <h2>{{ modalTitle() }}</h2>
+      </ng-template>
+
+      <ng-template #modalBody>
+        @if (showContent()) {
+          <p>{{ modalContent() }}</p>
+          @for (item of items(); track item.id) {
+            <div class="item">{{ item.name }}</div>
+          }
+        }
+      </ng-template>
+    </ngx-custom-modal>
+  `,
+})
+export class SignalExampleComponent {
+  modalTitle = signal('Signal-Based Modal');
+  modalContent = signal('This modal uses Angular 17 features!');
+  modalSize = signal<'sm' | 'md' | 'lg' | 'xl'>('lg');
+  showContent = signal(true);
+
+  items = signal([
+    { id: 1, name: 'Signal-based reactivity' },
+    { id: 2, name: 'Control flow syntax' },
+    { id: 3, name: 'Performance optimization' },
+  ]);
+
+  modalOptions = signal<ModalOptions>({
+    closeOnOutsideClick: true,
+    closeOnEscape: true,
+    animation: true,
+    centered: true,
+  });
+
+  onModalOpened() {
+    console.log('Modal opened with signals!');
+  }
+
+  onModalClosed() {
+    console.log('Modal closed');
+  }
+}
+```
+
 ## 📋 Examples
 
 ### Component Inside Modal
@@ -73,12 +139,12 @@ export class ExampleComponent {}
   template: `
     <button (click)="componentModal.open()">Open Component Modal</button>
 
-    <ngx-custom-modal #componentModal>
+    <ngx-custom-modal #componentModal [size]="'lg'">
       <ng-template #modalHeader>
         <h2>Component Modal</h2>
       </ng-template>
       <ng-template #modalBody>
-        <app-my-component></app-my-component>
+        <app-my-component [data]="componentData"></app-my-component>
       </ng-template>
       <ng-template #modalFooter>
         <button (click)="componentModal.close()" class="btn btn-secondary">Close</button>
@@ -86,7 +152,9 @@ export class ExampleComponent {}
     </ngx-custom-modal>
   `,
 })
-export class ComponentModalExample {}
+export class ComponentModalExample {
+  componentData = { message: 'Hello from component!' };
+}
 ```
 
 ### Nested Modals
@@ -94,17 +162,20 @@ export class ComponentModalExample {}
 ```typescript
 @Component({
   template: `
-    <ngx-custom-modal #parentModal>
+    <ngx-custom-modal #parentModal [size]="'xl'">
       <ng-template #modalHeader>
         <h2>Parent Modal</h2>
       </ng-template>
       <ng-template #modalBody>
-        <p>This is the parent modal.</p>
+        <p>This is the parent modal with automatic stack management.</p>
         <button (click)="childModal.open()">Open Child Modal</button>
 
-        <ngx-custom-modal #childModal>
+        <ngx-custom-modal #childModal [size]="'md'" [centered]="true">
+          <ng-template #modalHeader>
+            <h3>Child Modal</h3>
+          </ng-template>
           <ng-template #modalBody>
-            <p>This is the nested child modal!</p>
+            <p>This is a nested modal with proper z-index handling!</p>
           </ng-template>
         </ngx-custom-modal>
       </ng-template>
@@ -124,6 +195,10 @@ export class NestedModalExample {}
       [closeOnOutsideClick]="false"
       [closeOnEscape]="false"
       [hideCloseButton]="true"
+      [size]="'lg'"
+      [centered]="true"
+      [scrollable]="true"
+      [animation]="true"
       customClass="my-custom-modal"
     >
       <ng-template #modalHeader>
@@ -160,6 +235,14 @@ export class OptionsModalExample {
     closeOnEscape: true,
     customClass: 'my-modal-class',
     hideCloseButton: false,
+    size: 'lg',
+    centered: true,
+    scrollable: false,
+    animation: true,
+    animationDuration: 300,
+    backdrop: 'dynamic',
+    keyboard: true,
+    focus: true,
   };
 }
 ```
@@ -168,13 +251,29 @@ export class OptionsModalExample {
 
 ### Component Properties
 
-| Property              | Type           | Default | Description                          |
-| --------------------- | -------------- | ------- | ------------------------------------ |
-| `closeOnOutsideClick` | `boolean`      | `true`  | Close modal when clicking outside    |
-| `closeOnEscape`       | `boolean`      | `true`  | Close modal when pressing Escape key |
-| `customClass`         | `string`       | `''`    | Custom CSS class for the modal       |
-| `hideCloseButton`     | `boolean`      | `false` | Hide the default close button        |
-| `options`             | `ModalOptions` | `{}`    | Configuration options object         |
+| Property              | Type           | Default    | Description                          |
+| --------------------- | -------------- | ---------- | ------------------------------------ | ----------------- | ------ | ---------- |
+| `closeOnOutsideClick` | `boolean`      | `true`     | Close modal when clicking outside    |
+| `closeOnEscape`       | `boolean`      | `true`     | Close modal when pressing Escape key |
+| `customClass`         | `string`       | `''`       | Custom CSS class for the modal       |
+| `hideCloseButton`     | `boolean`      | `false`    | Hide the default close button        |
+| `options`             | `ModalOptions` | `{}`       | Configuration options object         |
+| `size`                | `'sm'          | 'md'       | 'lg'                                 | 'xl'`             | `'md'` | Modal size |
+| `centered`            | `boolean`      | `false`    | Center modal vertically              |
+| `scrollable`          | `boolean`      | `false`    | Make modal body scrollable           |
+| `animation`           | `boolean`      | `true`     | Enable/disable animations            |
+| `backdrop`            | `'static'      | 'dynamic'` | `'dynamic'`                          | Backdrop behavior |
+| `keyboard`            | `boolean`      | `true`     | Enable keyboard interactions         |
+| `focus`               | `boolean`      | `true`     | Enable focus management              |
+
+### Events
+
+| Event     | Type                 | Description                        |
+| --------- | -------------------- | ---------------------------------- |
+| `opening` | `EventEmitter<void>` | Emitted when modal starts opening  |
+| `opened`  | `EventEmitter<void>` | Emitted when modal is fully opened |
+| `closing` | `EventEmitter<void>` | Emitted when modal starts closing  |
+| `closed`  | `EventEmitter<void>` | Emitted when modal is fully closed |
 
 ### Template References
 
@@ -190,6 +289,7 @@ export class OptionsModalExample {
 | ------------- | --------- | -------------------------- |
 | `open()`      | `void`    | Opens the modal            |
 | `close()`     | `void`    | Closes the modal           |
+| `toggle()`    | `void`    | Toggles modal visibility   |
 | `isTopMost()` | `boolean` | Checks if modal is topmost |
 
 ### ModalOptions Interface
@@ -200,6 +300,14 @@ interface ModalOptions {
   closeOnEscape?: boolean;
   customClass?: string;
   hideCloseButton?: boolean;
+  backdrop?: 'static' | 'dynamic';
+  keyboard?: boolean;
+  focus?: boolean;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  centered?: boolean;
+  scrollable?: boolean;
+  animation?: boolean;
+  animationDuration?: number;
 }
 ```
 
@@ -207,9 +315,25 @@ interface ModalOptions {
 
 ### Default Styles
 
-The library comes with minimal default styles. For a complete styling solution, you can use the provided CSS:
+The library comes with modern CSS custom properties for easy theming:
 
 ```css
+:root {
+  /* Modal backdrop */
+  --modal-backdrop-bg: rgba(0, 0, 0, 0.5);
+  --modal-backdrop-blur: 2px;
+
+  /* Modal content */
+  --modal-content-bg: #fff;
+  --modal-content-border: 1px solid rgba(0, 0, 0, 0.125);
+  --modal-content-border-radius: 0.5rem;
+  --modal-content-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+  /* Animations */
+  --modal-animation-duration: 200ms;
+  --modal-z-index: 1050;
+}
+
 /* Basic modal styles */
 .modal {
   position: fixed;
@@ -217,13 +341,14 @@ The library comes with minimal default styles. For a complete styling solution, 
   left: 0;
   width: 100%;
   min-height: 100%;
-  background-color: rgba(0, 0, 0, 0.15);
-  z-index: 42;
+  background-color: var(--modal-backdrop-bg);
+  z-index: var(--modal-z-index);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s ease-in;
+  transition: opacity var(--modal-animation-duration) ease-in-out;
+  backdrop-filter: blur(var(--modal-backdrop-blur));
 }
 
 .modal.in {
@@ -231,9 +356,10 @@ The library comes with minimal default styles. For a complete styling solution, 
 }
 
 .modal-content {
-  background-color: #fff;
-  padding: 25px;
-  border-radius: 8px;
+  background-color: var(--modal-content-bg);
+  border: var(--modal-content-border);
+  border-radius: var(--modal-content-border-radius);
+  box-shadow: var(--modal-content-shadow);
   max-width: 500px;
   width: 90%;
 }
@@ -242,17 +368,20 @@ The library comes with minimal default styles. For a complete styling solution, 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #eee;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .modal-body {
-  padding: 20px 0;
+  padding: 1rem;
 }
 
 .modal-footer {
-  padding-top: 14px;
-  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid #dee2e6;
 }
 
 .close {
@@ -260,27 +389,37 @@ The library comes with minimal default styles. For a complete styling solution, 
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 0.25rem;
+  opacity: 0.5;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.close:hover {
+  opacity: 0.75;
 }
 ```
 
 ### Bootstrap Integration
 
-For Bootstrap users, ngx-custom-modal works out of the box with Bootstrap CSS classes:
+For Bootstrap users, ngx-custom-modal works seamlessly with all Bootstrap versions:
 
 ```html
-<!-- No additional CSS needed with Bootstrap -->
-<ngx-custom-modal #bootstrapModal>
+<!-- Bootstrap Modal Example -->
+<ngx-custom-modal #bootstrapModal [size]="'lg'" [centered]="true">
   <ng-template #modalHeader>
-    <h4 class="modal-title">Bootstrap Modal</h4>
+    <h1 class="modal-title fs-5">Bootstrap Modal</h1>
   </ng-template>
   <ng-template #modalBody>
-    <p>This modal uses Bootstrap styles automatically!</p>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="text-muted">Left column content</p>
+        </div>
+        <div class="col-md-6">
+          <p class="text-muted">Right column content</p>
+        </div>
+      </div>
+    </div>
   </ng-template>
   <ng-template #modalFooter>
     <button type="button" class="btn btn-secondary" (click)="bootstrapModal.close()">Close</button>
@@ -292,21 +431,28 @@ For Bootstrap users, ngx-custom-modal works out of the box with Bootstrap CSS cl
 ### Dark Mode Support
 
 ```css
-/* Dark mode styles */
+/* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  .modal {
-    background-color: rgba(0, 0, 0, 0.8);
+  :root {
+    --modal-backdrop-bg: rgba(0, 0, 0, 0.8);
+    --modal-content-bg: #1f2937;
+    --modal-content-border: 1px solid #374151;
+    --modal-text-color: #f9fafb;
   }
+}
 
-  .modal-content {
-    background-color: #1f2937;
-    color: #f9fafb;
-    border: 1px solid #374151;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --modal-animation-duration: 0ms;
   }
+}
 
-  .modal-header,
-  .modal-footer {
-    border-color: #374151;
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --modal-content-border: 2px solid currentColor;
+    --modal-backdrop-bg: rgba(0, 0, 0, 0.9);
   }
 }
 ```
@@ -393,22 +539,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 🐛 Issues: [GitHub Issues](https://github.com/AngelCareaga/ngx-custom-modal/issues)
 - 💬 Discussions: [GitHub Discussions](https://github.com/AngelCareaga/ngx-custom-modal/discussions)
 - 🌐 Website: [angelcareaga.com](https://angelcareaga.com)
-
-## 📈 Changelog
-
-### 18.0.2
-
-- Updated to Angular 18
-- Added standalone component support
-- Improved TypeScript definitions
-- Enhanced accessibility features
-
-### 17.0.1
-
-- Initial Angular 17 support
-- Standalone components by default
-- Bootstrap 4 compatibility
-- Nested modal support
 
 ---
 

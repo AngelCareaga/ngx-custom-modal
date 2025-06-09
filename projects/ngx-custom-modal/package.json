@@ -6,7 +6,7 @@
     "email": "dev.angelcareaga@gmail.com",
     "url": "angelcareaga.com"
   },
-  "version": "18.0.2",
+  "version": "20.0.0.rc.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -31,7 +31,10 @@
     "dialog",
     "component",
     "bootstrap",
-    "ui"
+    "ui",
+    "signals",
+    "control-flow",
+    "standalone"
   ],
   "private": false,
   "peerDependencies": {

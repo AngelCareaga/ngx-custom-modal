@@ -1,19 +1,52 @@
+<!-- ./projects/ngx-custom-modal/src/lib/ngx-custom-modal.component.html -->
+
+<!--
+  Main modal container with conditional rendering using Angular 17+ control flow.
+  Uses signals for reactive visibility state and implements WCAG accessibility standards.
+-->
 @if (visible()) {
-  <div class="modal fade" role="dialog" tabindex="-1" [class.in]="visibleAnimate()" [ngClass]="getCustomClass()">
-    <div class="modal-dialog">
+  <div
+    class="modal fade"
+    role="dialog"
+    tabindex="-1"
+    [class.in]="visibleAnimate()"
+    [ngClass]="getCustomClass()"
+    [attr.aria-modal]="true"
+    [attr.aria-labelledby]="titleId()"
+    [attr.aria-describedby]="descriptionId()"
+  >
+    <div class="modal-dialog" [ngClass]="getDialogClasses()">
       <div class="modal-content">
-        <div class="modal-header">
-          <ng-container *ngTemplateOutlet="header"></ng-container>
-          <button *ngIf="!shouldHideCloseButton()" class="close" data-dismiss="modal" type="button" aria-label="Close" (click)="close()">
-            ×
-          </button>
-        </div>
-        <div class="modal-body">
-          <ng-container *ngTemplateOutlet="body"></ng-container>
-        </div>
-        <div class="modal-footer">
-          <ng-container *ngTemplateOutlet="footer"></ng-container>
-        </div>
+        <!-- Header section with conditional close button -->
+        @if (header || hasHeaderContent()) {
+          <div class="modal-header">
+            <!-- User-provided header content via ng-template -->
+            <ng-container *ngTemplateOutlet="header"></ng-container>
+
+            <!-- Close button respects hideCloseButton setting and options -->
+            @if (!shouldHideCloseButton()) {
+              <button class="close" type="button" [attr.aria-label]="getCloseButtonLabel()" (click)="close()">
+                <span aria-hidden="true">×</span>
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Body section with proper ARIA labeling for screen readers -->
+        @if (body) {
+          <div class="modal-body" [id]="descriptionId()">
+            <!-- User-provided body content via ng-template -->
+            <ng-container *ngTemplateOutlet="body"></ng-container>
+          </div>
+        }
+
+        <!-- Footer section for action buttons and additional content -->
+        @if (footer || hasFooterContent()) {
+          <div class="modal-footer">
+            <!-- User-provided footer content via ng-template -->
+            <ng-container *ngTemplateOutlet="footer"></ng-container>
+          </div>
+        }
       </div>
     </div>
   </div>

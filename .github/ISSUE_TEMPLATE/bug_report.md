@@ -26,7 +26,7 @@ A clear and concise description of what you expected to happen.
 ## Environment
 
 - Angular version: [e.g. 17.0.0]
-- ngx-custom-modal version: [e.g. 18.0.2]
+- ngx-custom-modal version: [e.g. 20.0.0]
 - Browser: [e.g. chrome, safari]
 - OS: [e.g. iOS]
 
