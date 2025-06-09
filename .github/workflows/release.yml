@@ -1,0 +1,272 @@
+name: 🏷️ Release & Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Tipo de release'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      prerelease:
+        description: '¿Es un prerelease?'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  # 🔍 Validar cambios de versión
+  check-version:
+    name: 🔍 Check Version Changes
+    runs-on: ubuntu-latest
+    outputs:
+      should-release: ${{ steps.version-check.outputs.should-release }}
+      current-version: ${{ steps.version-check.outputs.current-version }}
+      npm-version: ${{ steps.version-check.outputs.npm-version }}
+
+    steps:
+      - name: 📦 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: 🔍 Check package version
+        id: version-check
+        run: |
+          # Obtener versión actual del package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current-version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+          # Verificar si el paquete existe en npm
+          if npm view ngx-custom-modal@$CURRENT_VERSION version 2>/dev/null; then
+            NPM_VERSION=$(npm view ngx-custom-modal@$CURRENT_VERSION version)
+            echo "npm-version=$NPM_VERSION" >> $GITHUB_OUTPUT
+            echo "should-release=false" >> $GITHUB_OUTPUT
+            echo "❌ La versión $CURRENT_VERSION ya existe en npm"
+            exit 0
+          else
+            # Obtener la última versión publicada
+            LATEST_NPM_VERSION=$(npm view ngx-custom-modal version 2>/dev/null || echo "0.0.0")
+            echo "npm-version=$LATEST_NPM_VERSION" >> $GITHUB_OUTPUT
+            echo "should-release=true" >> $GITHUB_OUTPUT
+            echo "✅ Nueva versión $CURRENT_VERSION lista para publicar (última: $LATEST_NPM_VERSION)"
+          fi
+
+      - name: 📊 Version Summary
+        run: |
+          echo "📋 **Resumen de Versiones:**"
+          echo "   - Versión actual: ${{ steps.version-check.outputs.current-version }}"
+          echo "   - Versión en npm: ${{ steps.version-check.outputs.npm-version }}"
+          echo "   - ¿Debe publicar?: ${{ steps.version-check.outputs.should-release }}"
+
+  # 🏗️ Preparar Release (solo si hay cambios)
+  prepare-release:
+    name: 🏗️ Prepare Release
+    runs-on: ubuntu-latest
+    needs: check-version
+    if: needs.check-version.outputs.should-release == 'true'
+    outputs:
+      new-version: ${{ steps.version.outputs.new-version }}
+      release-notes: ${{ steps.notes.outputs.release-notes }}
+
+    # 🔑 Permisos para modificar el repositorio
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📦 Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔍 Lint code
+        run: npm run lint
+
+      - name: 🏗️ Build library
+        run: npm run build:lib
+
+      - name: 🏷️ Bump version
+        id: version
+        run: |
+          # Configurar git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Bump version
+          if [ "${{ inputs.prerelease }}" = "true" ]; then
+            NEW_VERSION=$(npm version ${{ inputs.release_type }} --preid=rc --no-git-tag-version)
+          else
+            NEW_VERSION=$(npm version ${{ inputs.release_type }} --no-git-tag-version)
+          fi
+
+          echo "new-version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          echo "Nueva versión: ${NEW_VERSION}"
+
+      - name: 📝 Generate release notes
+        id: notes
+        run: |
+          # Generar release notes automáticamente
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            RELEASE_NOTES="🎉 Primera release de ngx-custom-modal"
+          else
+            RELEASE_NOTES=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s" --no-merges)
+          fi
+
+          # Escapar para GitHub
+          RELEASE_NOTES="${RELEASE_NOTES//'%'/'%25'}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\n'/'%0A'}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\r'/'%0D'}"
+
+          echo "release-notes=${RELEASE_NOTES}" >> $GITHUB_OUTPUT
+
+      - name: 📤 Upload prepared package
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-package
+          path: |
+            dist/
+            package.json
+            README.md
+            LICENSE
+          retention-days: 30
+
+  # ⚠️ Notificar si no hay cambios
+  notify-no-changes:
+    name: ⚠️ No Changes to Publish
+    runs-on: ubuntu-latest
+    needs: check-version
+    if: needs.check-version.outputs.should-release == 'false'
+
+    steps:
+      - name: ⚠️ Version already exists
+        run: |
+          echo "⚠️ **No se puede publicar**"
+          echo ""
+          echo "La versión **${{ needs.check-version.outputs.current-version }}** ya existe en npm."
+          echo ""
+          echo "🔧 **Para publicar una nueva versión:**"
+          echo "1. Actualiza la versión en package.json"
+          echo "2. Haz commit y push de los cambios"
+          echo "3. Ejecuta este workflow nuevamente"
+          echo ""
+          echo "🛠️ **Comandos útiles:**"
+          echo "\`\`\`bash"
+          echo "npm version patch  # Para bug fixes"
+          echo "npm version minor  # Para nuevas features"
+          echo "npm version major  # Para breaking changes"
+          echo "\`\`\`"
+          exit 1
+
+  # 🚀 Publicar a producción (solo con autorización y cambios)
+  publish-production:
+    name: 🚀 Publish to Production
+    runs-on: ubuntu-latest
+    needs: [check-version, prepare-release]
+    if: needs.check-version.outputs.should-release == 'true'
+
+    # 🔑 PERMISOS NECESARIOS AGREGADOS
+    permissions:
+      contents: write # Para crear tags y hacer push
+      packages: write # Para publicar packages
+      actions: read # Para leer artifacts
+
+    environment:
+      name: production
+      url: https://www.npmjs.com/package/ngx-custom-modal
+
+    steps:
+      - name: 📦 Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0 # Necesario para acceder a todos los tags
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 📤 Download prepared package
+        uses: actions/download-artifact@v4
+        with:
+          name: release-package
+
+      - name: 🏷️ Create Git Tag
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag ${{ needs.prepare-release.outputs.new-version }}
+          git push origin ${{ needs.prepare-release.outputs.new-version }}
+
+      - name: 🚀 Publish to npm
+        working-directory: ./dist/ngx-custom-modal
+        run: |
+          if [ "${{ inputs.prerelease }}" = "true" ]; then
+            npm publish --tag next --access public
+          else
+            npm publish --tag latest --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: 🎉 Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.prepare-release.outputs.new-version }}
+          name: Release ${{ needs.prepare-release.outputs.new-version }}
+          body: |
+            ## 🎉 Nueva versión de ngx-custom-modal
+
+            ### 📦 Instalación
+            ```bash
+            npm install ngx-custom-modal@${{ needs.prepare-release.outputs.new-version }}
+            ```
+
+            ### 🌐 Demo en vivo
+            [📱 Ver ejemplos interactivos](https://angelcareaga.github.io/ngx-custom-modal/)
+
+            ### 📝 Cambios
+            ${{ needs.prepare-release.outputs.release-notes }}
+
+            ### 🔗 Enlaces útiles
+            - [📖 Documentación](https://github.com/AngelCareaga/ngx-custom-modal#readme)
+            - [🧪 Ejemplos en vivo](https://angelcareaga.github.io/ngx-custom-modal/)
+            - [📦 NPM Package](https://www.npmjs.com/package/ngx-custom-modal)
+          draft: false
+          prerelease: ${{ inputs.prerelease }}
+          files: dist/ngx-custom-modal/*.tgz
+
+      - name: 💬 Notify success
+        run: |
+          echo "✅ Release ${{ needs.prepare-release.outputs.new-version }} publicada exitosamente!"
+          echo "📦 NPM: https://www.npmjs.com/package/ngx-custom-modal"
+          echo "🏷️ GitHub: https://github.com/${{ github.repository }}/releases/tag/${{ needs.prepare-release.outputs.new-version }}"
+          echo "🌐 Demo: https://angelcareaga.github.io/ngx-custom-modal/"
