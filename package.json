@@ -6,7 +6,7 @@
     "email": "dev.angelcareaga@gmail.com",
     "url": "angelcareaga.com"
   },
-  "version": "20.0.0",
+  "version": "20.0.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
