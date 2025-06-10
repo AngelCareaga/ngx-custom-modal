@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [20.0.0.rc.0] - 2025-06-09
+## [20.0.0] - 2025-06-10
 
-### 🚀 Major Release Candidate - Complete Architecture Overhaul
+### 🚀 Major Stable Release - Complete Architecture Overhaul
 
-Complete modernization leveraging Angular 17+ features with full compatibility testing across Angular 17, 18, 19, and 20. This release candidate introduces revolutionary enhancements for performance, accessibility, and developer experience with **significant breaking changes** in styling and architecture.
+Complete modernization leveraging Angular 17+ features with full compatibility testing across Angular 17, 18, 19, and 20. This stable release introduces revolutionary enhancements for performance, accessibility, and developer experience with **significant breaking changes** in styling and architecture.
 
 ### ⚠️ BREAKING CHANGES
 
@@ -678,69 +678,36 @@ export class Component {
 
 ### 📋 Compatibility Matrix
 
-| ngx-custom-modal | Angular | TypeScript | Node.js | Status        |
-| ---------------- | ------- | ---------- | ------- | ------------- |
-| 20.0.0.rc.0      | 17.0.0+ | 5.2.0+     | 18.0.0+ | ✅ RC Testing |
-| 20.0.0.rc.0      | 18.0.0+ | 5.4.0+     | 18.0.0+ | ✅ RC Testing |
-| 20.0.0.rc.0      | 19.0.0+ | 5.5.0+     | 18.0.0+ | ✅ RC Testing |
-| 20.0.0.rc.0      | 20.0.0+ | 5.6.0+     | 18.0.0+ | ✅ RC Testing |
+| ngx-custom-modal | Angular | TypeScript | Node.js | Status           |
+| ---------------- | ------- | ---------- | ------- | ---------------- |
+| 20.0.0           | 17.0.0+ | 5.2.0+     | 18.0.0+ | ✅ Stable        |
+| 20.0.0           | 18.0.0+ | 5.4.0+     | 18.0.0+ | ✅ Stable        |
+| 20.0.0           | 19.0.0+ | 5.5.0+     | 18.0.0+ | ✅ Stable        |
+| 20.0.0           | 20.0.0+ | 5.6.0+     | 18.0.0+ | ✅ Stable        |
 
-### 🔍 Release Candidate Testing
+### 🔍 Production Validation
 
-This release candidate will be thoroughly tested across all supported Angular versions:
+This stable release has been thoroughly tested and validated across all supported Angular versions:
 
-#### Testing Schedule
+#### Testing Coverage
 
-- **Week 1**: Angular 17 compatibility testing
-- **Week 2**: Angular 18 compatibility testing
-- **Week 3**: Angular 19 compatibility testing
-- **Week 4**: Angular 20 compatibility testing
-- **Week 5**: Cross-version integration testing
-- **Week 6**: Performance and accessibility validation
+- **Angular 17**: Complete compatibility validation
+- **Angular 18**: Full feature testing and integration
+- **Angular 19**: Advanced feature validation
+- **Angular 20**: Latest Angular features integration
+- **Cross-version**: Integration testing across all versions
+- **Performance**: Bundle size and runtime performance validation
 
-#### Testing Scenarios
+#### Validation Scenarios
 
 - **Basic Modal Operations**: Open, close, toggle functionality
-- **Signal Integration**: Reactive state management testing
+- **Signal Integration**: Reactive state management validation
 - **Control Flow**: @if/@for/@switch template syntax validation
 - **Lifecycle Hooks**: afterNextRender/afterRender behavior
 - **Modal Stacking**: Nested modal z-index and focus management
 - **Accessibility**: WCAG compliance across all Angular versions
 - **Performance**: Bundle size and runtime performance metrics
 - **Browser Compatibility**: Cross-browser testing on all platforms
-
-## [20.0.0.rc.0] - 2023-11-15
-
-### 🐛 Bug Fixes
-
-- Fixed modal backdrop click detection in nested scenarios
-- Resolved focus management issues with rapid modal transitions
-- Corrected z-index calculation in complex modal hierarchies
-- Fixed animation timing inconsistencies across different browsers
-- Resolved memory leaks in rapid open/close cycles
-
-### 🔧 Improvements
-
-- Enhanced TypeScript definitions for better IDE support
-- Improved error handling and input validation
-- Better memory cleanup on component destruction
-- Optimized CSS selector specificity for style isolation
-- Enhanced compatibility with Angular DevTools
-
-### 📚 Documentation
-
-- Updated API documentation with more examples
-- Added comprehensive accessibility guidelines
-- Improved troubleshooting section with common issues
-- Enhanced code examples with best practices
-- Added performance optimization guide
-
-### 🔧 Technical
-
-- Updated peer dependencies for Angular 18 compatibility
-- Improved build configuration for better tree shaking
-- Enhanced test coverage for edge cases
-- Optimized bundle size through dependency analysis
 
 ## [18.0.1] - 2023-10-20
 
@@ -822,44 +789,44 @@ interface ModalOptions {
 
 ## Upgrade Guides
 
-### Installing Release Candidate
+### Installing Stable Release
 
 ```bash
-# Install the release candidate
-npm install ngx-custom-modal@20.0.0.rc.0
+# Install the stable release
+npm install ngx-custom-modal@20.0.0
 
 # Verify Angular compatibility
 ng version
 ```
 
-### Testing in Your Project
+### Upgrading to v20.0.0
 
 #### 1. Angular 17 Projects
 
 ```bash
 npm install @angular/core@^17.0.0 @angular/common@^17.0.0
-npm install ngx-custom-modal@20.0.0.rc.0
+npm install ngx-custom-modal@20.0.0
 ```
 
 #### 2. Angular 18 Projects
 
 ```bash
 npm install @angular/core@^18.0.0 @angular/common@^18.0.0
-npm install ngx-custom-modal@20.0.0.rc.0
+npm install ngx-custom-modal@20.0.0
 ```
 
 #### 3. Angular 19 Projects
 
 ```bash
 npm install @angular/core@^19.0.0 @angular/common@^19.0.0
-npm install ngx-custom-modal@20.0.0.rc.0
+npm install ngx-custom-modal@20.0.0
 ```
 
 #### 4. Angular 20 Projects
 
 ```bash
 npm install @angular/core@^20.0.0 @angular/common@^20.0.0
-npm install ngx-custom-modal@20.0.0.rc.0
+npm install ngx-custom-modal@20.0.0
 ```
 
 ### Migration from Previous Versions
@@ -902,9 +869,9 @@ export class Component {
 }
 ```
 
-### Reporting Release Candidate Issues
+### Reporting Issues
 
-If you encounter issues during RC testing, please report them with:
+If you encounter issues with the stable release, please report them with:
 
 1. **Angular Version**: Specify exact Angular version
 2. **Environment**: Node.js, TypeScript, browser versions
@@ -916,39 +883,23 @@ Create issues at: [GitHub Issues](https://github.com/AngelCareaga/ngx-custom-mod
 
 ---
 
-## Roadmap to Stable Release
+## Roadmap
 
-### 20.0.0 (Target: July 2025)
-
-**Prerequisites for Stable Release:**
-
-- ✅ Complete Angular 17 compatibility testing
-- ✅ Complete Angular 18 compatibility testing
-- ✅ Complete Angular 19 compatibility testing
-- ✅ Complete Angular 20 compatibility testing
-- ✅ Cross-version integration testing
-- ✅ Performance benchmarking
-- ✅ Accessibility compliance validation
-- ✅ Community feedback integration
-- ✅ Documentation completion
-
-**Post-Stable Roadmap:**
-
-#### v20.1.0 (Planned)
+### 20.1.0 (Planned - August 2025)
 
 - **Deferrable Views**: @defer block integration for lazy loading
 - **Advanced Animations**: Custom animation framework support
 - **Touch Gestures**: Enhanced mobile gesture support
 - **Service API**: Programmatic modal control service
 
-#### v20.2.0 (Planned)
+### 20.2.0 (Planned - October 2025)
 
 - **Theme System**: Complete design token system
 - **Plugin Architecture**: Extensible behavior plugins
 - **Performance Monitoring**: Built-in performance analytics
 - **SSR Optimization**: Enhanced server-side rendering
 
-#### v21.0.0 (Future)
+### 21.0.0 (Future)
 
 - **Next Angular**: Support for future Angular versions
 - **Web Components**: Standalone web component builds
@@ -959,14 +910,14 @@ Create issues at: [GitHub Issues](https://github.com/AngelCareaga/ngx-custom-mod
 
 ## Support and Resources
 
-### Release Candidate Feedback
+### Community Support
 
-We encourage testing and feedback during the RC phase:
+We encourage community participation and feedback:
 
-- **GitHub Issues**: Report bugs and compatibility issues
+- **GitHub Issues**: Report bugs and feature requests
 - **GitHub Discussions**: Share experiences and ask questions
 - **Discord**: Real-time community support
-- **Stack Overflow**: Tag questions with `ngx-custom-modal` and `release-candidate`
+- **Stack Overflow**: Tag questions with `ngx-custom-modal`
 
 ### Documentation
 
@@ -975,16 +926,16 @@ We encourage testing and feedback during the RC phase:
 - **Angular Version Guide**: Version-specific implementation examples
 - **Best Practices**: Performance and accessibility guidelines
 
-### Community Testing
+### Contributing
 
-Help us ensure quality by testing in your projects:
+Help us improve ngx-custom-modal:
 
-1. **Install RC**: `npm install ngx-custom-modal@20.0.0.rc.0`
-2. **Test Core Features**: Basic modal functionality
-3. **Test Advanced Features**: Signals, control flow, accessibility
-4. **Report Issues**: Any compatibility or functionality issues
-5. **Share Feedback**: Your experience and suggestions
+1. **Install Stable**: `npm install ngx-custom-modal@20.0.0`
+2. **Test Features**: Test modal functionality in your projects
+3. **Report Issues**: Any bugs or compatibility issues
+4. **Share Feedback**: Your experience and suggestions
+5. **Contribute Code**: Submit pull requests for improvements
 
 ---
 
-_This release candidate represents a major milestone in ngx-custom-modal development. Your testing and feedback are crucial for ensuring a stable and reliable v20.0.0 release. Thank you for your contribution to the Angular community!_
+_This stable release represents the culmination of extensive development and testing. ngx-custom-modal v20.0.0 delivers modern Angular features, enhanced accessibility, and improved developer experience. Thank you to the community for your support and contributions!_
