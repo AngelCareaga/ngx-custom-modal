@@ -7,11 +7,353 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [20.0.0.rc.0] - 2025-06-09
 
-### 🚀 Major Release Candidate
+### 🚀 Major Release Candidate - Complete Architecture Overhaul
 
-Complete modernization leveraging Angular 17+ features with full compatibility testing across Angular 17, 18, 19, and 20. This release candidate introduces revolutionary enhancements for performance, accessibility, and developer experience.
+Complete modernization leveraging Angular 17+ features with full compatibility testing across Angular 17, 18, 19, and 20. This release candidate introduces revolutionary enhancements for performance, accessibility, and developer experience with **significant breaking changes** in styling and architecture.
 
-### ✨ Features
+### ⚠️ BREAKING CHANGES
+
+#### 🎨 Complete SCSS/CSS Rewrite
+
+**Previous styling system (simple):**
+
+```scss
+:host ::ng-deep modal .modal {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 42;
+}
+
+:host ::ng-deep .modal.in {
+  opacity: 1;
+}
+```
+
+**New styling system (comprehensive):**
+
+```scss
+/* Complete CSS custom properties system */
+:root {
+  --modal-backdrop-bg: rgba(0, 0, 0, 0.5);
+  --modal-backdrop-blur: 2px;
+  --modal-content-bg: #fff;
+  --modal-content-border: 1px solid rgba(0, 0, 0, 0.125);
+  --modal-content-border-radius: 0.5rem;
+  --modal-content-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --modal-animation-duration: 200ms;
+  --modal-z-index: 1050;
+}
+
+/* Modern flexbox layout with backdrop blur */
+:host ::ng-deep .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  opacity: 0;
+  transition: opacity var(--modal-animation-duration, 200ms) ease-in-out;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :host ::ng-deep .modal {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  :host ::ng-deep .modal-content {
+    background-color: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+  }
+}
+
+/* Accessibility: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep .modal {
+    transition: none;
+  }
+  :host ::ng-deep .modal-dialog {
+    transition: none;
+  }
+}
+```
+
+**Migration Impact:**
+
+- **Z-Index Change**: From `z-index: 42` to `z-index: 1050+` (Bootstrap standard)
+- **Background Color**: From `rgba(0, 0, 0, 0.15)` to `rgba(0, 0, 0, 0.5)` with blur
+- **Animation System**: New CSS custom properties for animation control
+- **Dark Mode**: Automatic dark mode support may change appearance
+- **Custom Styles**: Any custom CSS overrides will need to be updated
+
+#### 🏗️ HTML Structure Changes
+
+**Previous structure (basic):**
+
+```html
+@if (visible()) {
+<div class="modal fade" role="dialog" tabindex="-1" [class.in]="visibleAnimate()" [ngClass]="getCustomClass()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <ng-container *ngTemplateOutlet="header"></ng-container>
+        <button class="close" type="button" (click)="close()">×</button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngTemplateOutlet="body"></ng-container>
+      </div>
+      <div class="modal-footer">
+        <ng-container *ngTemplateOutlet="footer"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+}
+```
+
+**New structure (accessibility-enhanced):**
+
+```html
+@if (visible()) {
+<div
+  class="modal fade"
+  role="dialog"
+  tabindex="-1"
+  [class.in]="visibleAnimate()"
+  [ngClass]="getCustomClass()"
+  [attr.aria-modal]="true"
+  [attr.aria-labelledby]="titleId()"
+  [attr.aria-describedby]="descriptionId()"
+>
+  <div class="modal-dialog" [ngClass]="getDialogClasses()">
+    <div class="modal-content">
+      @if (header || hasHeaderContent()) {
+      <div class="modal-header">
+        <ng-container *ngTemplateOutlet="header"></ng-container>
+        @if (!shouldHideCloseButton()) {
+        <button class="close" type="button" [attr.aria-label]="getCloseButtonLabel()" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+        }
+      </div>
+      } @if (body) {
+      <div class="modal-body" [id]="descriptionId()">
+        <ng-container *ngTemplateOutlet="body"></ng-container>
+      </div>
+      } @if (footer || hasFooterContent()) {
+      <div class="modal-footer">
+        <ng-container *ngTemplateOutlet="footer"></ng-container>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+}
+```
+
+**Migration Impact:**
+
+- **ARIA Attributes**: New accessibility attributes may affect automated testing
+- **Conditional Rendering**: Headers and footers now render conditionally
+- **Dynamic Classes**: `getDialogClasses()` method adds size and positioning classes
+- **Unique IDs**: Dynamic ID generation for `aria-labelledby` and `aria-describedby`
+
+#### 🔧 Component API Breaking Changes
+
+**Previous component (basic):**
+
+```typescript
+export class NgxCustomModalComponent implements OnDestroy {
+  @Input() closeOnOutsideClick = true;
+  @Input() closeOnEscape = true;
+  @Input() customClass?: string;
+  @Input() hideCloseButton = false;
+  @Input() options: ModalOptions = {};
+
+  visible = signal<boolean>(false);
+  visibleAnimate = signal<boolean>(false);
+
+  open(): void {
+    /* basic implementation */
+  }
+  close(): void {
+    /* basic implementation */
+  }
+}
+```
+
+**New component (advanced):**
+
+```typescript
+export class NgxCustomModalComponent implements OnInit, OnDestroy {
+  // Previous inputs (maintained for compatibility)
+  @Input() closeOnOutsideClick = true;
+  @Input() closeOnEscape = true;
+  @Input() customClass?: string;
+  @Input() hideCloseButton = false;
+  @Input() options: ModalOptions = {};
+
+  // NEW: Enhanced configuration inputs
+  @Input() size: 'sm' | 'md' | 'lg' | 'xl' = 'md';
+  @Input() centered = false;
+  @Input() scrollable = false;
+  @Input() animation = true;
+  @Input() backdrop: 'static' | 'dynamic' = 'dynamic';
+  @Input() keyboard = true;
+  @Input() focus = true;
+
+  // NEW: Granular event outputs
+  @Output() opened = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
+  @Output() opening = new EventEmitter<void>();
+  @Output() closing = new EventEmitter<void>();
+
+  // NEW: Advanced computed signals and state management
+  visible = computed(() => this.modalState().isVisible);
+  visibleAnimate = signal<boolean>(false);
+  titleId = signal(`modal-title-${Math.random().toString(36).substr(2, 9)}`);
+  descriptionId = signal(`modal-desc-${Math.random().toString(36).substr(2, 9)}`);
+
+  // NEW: Enhanced methods
+  open(): void {
+    /* advanced implementation with focus management */
+  }
+  close(): void {
+    /* advanced implementation with cleanup */
+  }
+  toggle(): void {
+    /* new method */
+  }
+  isTopMost(): boolean {
+    /* enhanced modal stack detection */
+  }
+  getDialogClasses(): string {
+    /* new method for dynamic classes */
+  }
+  shouldHideCloseButton(): boolean {
+    /* enhanced logic */
+  }
+  getCloseButtonLabel(): string {
+    /* new accessibility method */
+  }
+  hasHeaderContent(): boolean {
+    /* new template detection */
+  }
+  hasFooterContent(): boolean {
+    /* new template detection */
+  }
+}
+```
+
+**Migration Impact:**
+
+- **New Event Outputs**: `opening`, `opened`, `closing`, `closed` events replace simple state changes
+- **New Methods**: Additional public methods may conflict with existing custom extensions
+- **Enhanced State Management**: Signal-based state may behave differently in edge cases
+- **Focus Management**: Automatic focus management may interfere with custom focus logic
+
+#### 📦 New Dependencies and Services
+
+**NEW: Modal Stack Service**
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class NgxModalStackService {
+  register(modal: NgxCustomModalComponent): void;
+  unregister(modal: NgxCustomModalComponent): void;
+  isTopMost(modal: NgxCustomModalComponent): boolean;
+  getNextZIndex(): number;
+  getActiveModalsCount(): number;
+}
+```
+
+**NEW: Lifecycle Compatibility Service**
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class LifecycleCompatibilityService {
+  afterEveryRender(callback: AfterRenderCallback, options?: AfterRenderOptions): (() => void) | null;
+  afterNextRender(callback: AfterRenderCallback, options?: AfterRenderOptions): (() => void) | null;
+  getVersionInfo(): VersionInfo;
+}
+```
+
+**Migration Impact:**
+
+- **Automatic Service Injection**: New services are automatically injected and may affect existing modal behavior
+- **Z-Index Management**: Automatic z-index calculation may override custom z-index implementations
+- **Modal Stacking**: Enhanced modal stacking may change behavior in nested modal scenarios
+
+#### 🎛️ Enhanced ModalOptions Interface
+
+**Previous interface (basic):**
+
+```typescript
+interface ModalOptions {
+  closeOnOutsideClick?: boolean;
+  closeOnEscape?: boolean;
+  customClass?: string;
+  hideCloseButton?: boolean;
+}
+```
+
+**New interface (comprehensive):**
+
+```typescript
+interface ModalOptions {
+  // Previous options (maintained)
+  closeOnOutsideClick?: boolean;
+  closeOnEscape?: boolean;
+  customClass?: string;
+  hideCloseButton?: boolean;
+
+  // NEW: Advanced configuration options
+  backdrop?: 'static' | 'dynamic';
+  keyboard?: boolean;
+  focus?: boolean;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  centered?: boolean;
+  scrollable?: boolean;
+  animation?: boolean;
+  animationDuration?: number;
+}
+
+// NEW: Additional interfaces
+interface ModalState {
+  isVisible: boolean;
+  isAnimating: boolean;
+  zIndex: number;
+  previousFocusedElement?: HTMLElement;
+}
+
+interface ModalButton {
+  id: string;
+  text: string;
+  class: string;
+  type?: 'button' | 'submit' | 'reset';
+  handler?: () => void;
+  disabled?: boolean;
+}
+```
+
+### ✨ New Features
 
 #### Signal-Based Architecture
 
@@ -148,7 +490,7 @@ interface ModalButton {
 }
 ```
 
-### 🎨 Styling System
+### 🎨 Complete Styling System Overhaul
 
 #### CSS Custom Properties
 
@@ -213,9 +555,83 @@ interface ModalButton {
 - **Husky**: Git hooks for code quality and conventional commits
 - **Semantic Release**: Automated versioning and changelog generation
 
-### 🔄 Migration
+### 🔄 Migration Guide
 
-#### Template Syntax
+#### 1. Update Custom Styles
+
+**Before:**
+
+```scss
+.my-custom-modal {
+  z-index: 45 !important;
+  background: rgba(255, 0, 0, 0.2);
+}
+```
+
+**After:**
+
+```scss
+.my-custom-modal {
+  --modal-z-index: 1055;
+  --modal-backdrop-bg: rgba(255, 0, 0, 0.2);
+  --modal-backdrop-blur: 0px;
+}
+```
+
+#### 2. Update Event Handling
+
+**Before:**
+
+```typescript
+// No granular events available
+modalComponent.open();
+// Wait for arbitrary timeout
+setTimeout(() => {
+  console.log('Modal probably opened');
+}, 300);
+```
+
+**After:**
+
+```typescript
+// Use granular events
+modalComponent.opening.subscribe(() => console.log('Modal starting to open'));
+modalComponent.opened.subscribe(() => console.log('Modal fully opened'));
+modalComponent.closing.subscribe(() => console.log('Modal starting to close'));
+modalComponent.closed.subscribe(() => console.log('Modal fully closed'));
+```
+
+#### 3. Update Testing
+
+**Before:**
+
+```typescript
+// Basic testing
+fixture.detectChanges();
+expect(component.visible()).toBe(true);
+```
+
+**After:**
+
+```typescript
+// Enhanced testing with proper timing
+TestBed.tick(); // For signals
+fixture.detectChanges();
+expect(component.visible()).toBe(true);
+expect(component.isTopMost()).toBe(true);
+```
+
+#### 4. Check Accessibility
+
+**Review and update any custom accessibility implementations as the component now provides:**
+
+- Automatic ARIA attribute management
+- Focus management and restoration
+- Screen reader announcements
+- Keyboard navigation
+- High contrast and reduced motion support
+
+#### Template Syntax Migration
 
 ```typescript
 // Previous approach
@@ -237,7 +653,7 @@ template: `
 `;
 ```
 
-#### State Management
+#### State Management Migration
 
 ```typescript
 // Previous approach
@@ -253,7 +669,7 @@ export class Component {
 }
 ```
 
-### 🔧 Breaking Changes
+### 🔧 Additional Breaking Changes
 
 - **Angular Version**: Requires Angular 17.0.0 or higher
 - **Template Syntax**: Recommends @if/@for/@switch over structural directives

@@ -29,6 +29,39 @@
 - 🎛️ **Configurable** - Extensive customization options
 - ♿ **WCAG Compliant** - Full accessibility support with screen reader compatibility
 
+## 🚨 Version 20.0.0 - Breaking Changes Notice
+
+<div align="center">
+
+> **⚠️ IMPORTANT: Version 20.0.0 introduces significant breaking changes**
+>
+> **✅ Full Angular 17, 18, 19 & 20 Compatibility**
+>
+> Before upgrading, please review the **[CHANGELOG.md](./CHANGELOG.md)** for detailed migration instructions
+
+</div>
+
+### 🔥 Major Updates in v20.0.0
+
+- **🎨 Complete CSS/SCSS Rewrite** - New custom properties system and modern styling
+- **🏗️ Enhanced HTML Structure** - Improved accessibility with ARIA attributes
+- **⚡ Signal-Based Architecture** - Performance optimizations with Angular signals
+- **🔧 New APIs & Services** - Modal stack management and lifecycle compatibility
+- **🎯 Z-Index Management** - Updated from `z-index: 42` to Bootstrap-standard `1050+`
+
+### 📚 What You Need to Check
+
+| Component          | What Changed                                                   | Action Required                      |
+| ------------------ | -------------------------------------------------------------- | ------------------------------------ |
+| **Custom CSS**     | Complete styling overhaul                                      | Review and update custom styles      |
+| **Event Handling** | New granular events (`opening`, `opened`, `closing`, `closed`) | Update event listeners               |
+| **Testing**        | New signal-based testing patterns                              | Update test assertions               |
+| **Accessibility**  | Enhanced ARIA attributes                                       | Verify accessibility implementations |
+
+**👉 [Read Full Migration Guide in CHANGELOG.md](./CHANGELOG.md#breaking-changes)**
+
+---
+
 ## 🚀 Quick Start
 
 ### Installation
@@ -251,20 +284,20 @@ export class OptionsModalExample {
 
 ### Component Properties
 
-| Property              | Type           | Default    | Description                          |
-| --------------------- | -------------- | ---------- | ------------------------------------ | ----------------- | ------ | ---------- |
-| `closeOnOutsideClick` | `boolean`      | `true`     | Close modal when clicking outside    |
-| `closeOnEscape`       | `boolean`      | `true`     | Close modal when pressing Escape key |
-| `customClass`         | `string`       | `''`       | Custom CSS class for the modal       |
-| `hideCloseButton`     | `boolean`      | `false`    | Hide the default close button        |
-| `options`             | `ModalOptions` | `{}`       | Configuration options object         |
-| `size`                | `'sm'          | 'md'       | 'lg'                                 | 'xl'`             | `'md'` | Modal size |
-| `centered`            | `boolean`      | `false`    | Center modal vertically              |
-| `scrollable`          | `boolean`      | `false`    | Make modal body scrollable           |
-| `animation`           | `boolean`      | `true`     | Enable/disable animations            |
-| `backdrop`            | `'static'      | 'dynamic'` | `'dynamic'`                          | Backdrop behavior |
-| `keyboard`            | `boolean`      | `true`     | Enable keyboard interactions         |
-| `focus`               | `boolean`      | `true`     | Enable focus management              |
+| Property              | Type                           | Default     | Description                          |
+| --------------------- | ------------------------------ | ----------- | ------------------------------------ |
+| `closeOnOutsideClick` | `boolean`                      | `true`      | Close modal when clicking outside    |
+| `closeOnEscape`       | `boolean`                      | `true`      | Close modal when pressing Escape key |
+| `customClass`         | `string`                       | `''`        | Custom CSS class for the modal       |
+| `hideCloseButton`     | `boolean`                      | `false`     | Hide the default close button        |
+| `options`             | `ModalOptions`                 | `{}`        | Configuration options object         |
+| `size`                | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`      | Modal size                           |
+| `centered`            | `boolean`                      | `false`     | Center modal vertically              |
+| `scrollable`          | `boolean`                      | `false`     | Make modal body scrollable           |
+| `animation`           | `boolean`                      | `true`      | Enable/disable animations            |
+| `backdrop`            | `'static' \| 'dynamic'`        | `'dynamic'` | Backdrop behavior                    |
+| `keyboard`            | `boolean`                      | `true`      | Enable keyboard interactions         |
+| `focus`               | `boolean`                      | `true`      | Enable focus management              |
 
 ### Events
 
