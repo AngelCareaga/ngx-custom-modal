@@ -1,9 +1,22 @@
+// ./projects/ngx-custom-modal/src/lib/ngx-custom-modal.component.spec.ts
+
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NgxCustomModalComponent } from './ngx-custom-modal.component';
 import { NgxModalStackService } from './ngx-modal-stack.service';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subject } from 'rxjs';
+
+class MockRouter {
+  private eventsSubject = new Subject();
+  public events = this.eventsSubject.asObservable();
+
+  triggerNavigationEnd() {
+    this.eventsSubject.next(new NavigationEnd(1, '/test', '/test'));
+  }
+}
 
 @Component({
   template: `
@@ -41,12 +54,15 @@ describe('NgxCustomModalComponent', () => {
   let hostComponent: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
   let modalStackService: NgxModalStackService;
+  let mockRouter: MockRouter;
 
   beforeEach(async () => {
+    mockRouter = new MockRouter();
+
     await TestBed.configureTestingModule({
       imports: [CommonModule, NgxCustomModalComponent],
       declarations: [TestHostComponent],
-      providers: [NgxModalStackService],
+      providers: [NgxModalStackService, { provide: Router, useValue: mockRouter }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);
@@ -71,6 +87,7 @@ describe('NgxCustomModalComponent', () => {
     expect(component.centered).toBeFalse();
     expect(component.scrollable).toBeFalse();
     expect(component.animation).toBeTrue();
+    expect(component.closeOnRouteChange).toBeTrue();
   });
 
   it('should open the modal', fakeAsync(() => {
@@ -175,6 +192,75 @@ describe('NgxCustomModalComponent', () => {
 
     document.dispatchEvent(event);
     expect(component.close).not.toHaveBeenCalled();
+  }));
+
+  it('should close modal on route change when enabled', fakeAsync(() => {
+    component.closeOnRouteChange = true;
+    component.open();
+    tick(10);
+    fixture.detectChanges();
+
+    expect(component.visible()).toBeTrue();
+
+    spyOn(component, 'close');
+    mockRouter.triggerNavigationEnd();
+
+    expect(component.close).toHaveBeenCalled();
+  }));
+
+  it('should not close modal on route change when disabled', fakeAsync(() => {
+    component.closeOnRouteChange = false;
+    component.open();
+    tick(10);
+    fixture.detectChanges();
+
+    expect(component.visible()).toBeTrue();
+
+    spyOn(component, 'close');
+    mockRouter.triggerNavigationEnd();
+
+    expect(component.close).not.toHaveBeenCalled();
+  }));
+
+  it('should close modal on route change via options', fakeAsync(() => {
+    component.options = { closeOnRouteChange: true };
+    component.open();
+    tick(10);
+    fixture.detectChanges();
+
+    expect(component.visible()).toBeTrue();
+
+    spyOn(component, 'close');
+    mockRouter.triggerNavigationEnd();
+
+    expect(component.close).toHaveBeenCalled();
+  }));
+
+  it('should not close modal on route change via options when disabled', fakeAsync(() => {
+    component.options = { closeOnRouteChange: false };
+    component.open();
+    tick(10);
+    fixture.detectChanges();
+
+    expect(component.visible()).toBeTrue();
+
+    spyOn(component, 'close');
+    mockRouter.triggerNavigationEnd();
+
+    expect(component.close).not.toHaveBeenCalled();
+  }));
+
+  it('should not crash when router is not available', fakeAsync(() => {
+    const fixtureWithoutRouter = TestBed.createComponent(TestHostComponent);
+    TestBed.overrideProvider(Router, { useValue: null });
+
+    const componentWithoutRouter = fixtureWithoutRouter.componentInstance.modal;
+
+    expect(() => {
+      componentWithoutRouter.open();
+      tick(10);
+      fixtureWithoutRouter.detectChanges();
+    }).not.toThrow();
   }));
 
   it('should add custom class', fakeAsync(() => {
@@ -282,6 +368,7 @@ describe('NgxCustomModalComponent', () => {
       size: 'lg',
       centered: true,
       animation: false,
+      closeOnRouteChange: false,
     };
 
     component.options = hostComponent.modalOptions;

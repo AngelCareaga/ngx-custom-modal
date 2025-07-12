@@ -52,6 +52,9 @@ export interface ModalOptions {
 
   /** Animation duration in milliseconds. @default 200 */
   animationDuration?: number;
+
+  /** Close modal automatically when navigating to a different route. @default true */
+  closeOnRouteChange?: boolean;
 }
 
 /**

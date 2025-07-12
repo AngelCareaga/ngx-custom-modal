@@ -28,6 +28,7 @@
 - 🎪 **Custom Content** - Support for components and HTML templates
 - 🎛️ **Configurable** - Extensive customization options
 - ♿ **WCAG Compliant** - Full accessibility support with screen reader compatibility
+- 🔄 **Route Aware** - Automatic modal closing on navigation (configurable)
 
 ## 🚨 Version 20.0.0 - Breaking Changes Notice
 
@@ -48,15 +49,17 @@
 - **⚡ Signal-Based Architecture** - Performance optimizations with Angular signals
 - **🔧 New APIs & Services** - Modal stack management and lifecycle compatibility
 - **🎯 Z-Index Management** - Updated from `z-index: 42` to Bootstrap-standard `1050+`
+- **🔄 Route Change Detection** - Automatic modal closing on navigation
 
 ### 📚 What You Need to Check
 
-| Component          | What Changed                                                   | Action Required                      |
-| ------------------ | -------------------------------------------------------------- | ------------------------------------ |
-| **Custom CSS**     | Complete styling overhaul                                      | Review and update custom styles      |
-| **Event Handling** | New granular events (`opening`, `opened`, `closing`, `closed`) | Update event listeners               |
-| **Testing**        | New signal-based testing patterns                              | Update test assertions               |
-| **Accessibility**  | Enhanced ARIA attributes                                       | Verify accessibility implementations |
+| Component          | What Changed                                                   | Action Required                        |
+| ------------------ | -------------------------------------------------------------- | -------------------------------------- |
+| **Custom CSS**     | Complete styling overhaul                                      | Review and update custom styles        |
+| **Event Handling** | New granular events (`opening`, `opened`, `closing`, `closed`) | Update event listeners                 |
+| **Testing**        | New signal-based testing patterns                              | Update test assertions                 |
+| **Accessibility**  | Enhanced ARIA attributes                                       | Verify accessibility implementations   |
+| **Route Behavior** | Automatic modal closing on navigation (enabled by default)     | Configure if different behavior needed |
 
 **👉 [Read Full Migration Guide in CHANGELOG.md](./CHANGELOG.md#breaking-changes)**
 
@@ -151,6 +154,7 @@ export class SignalExampleComponent {
     closeOnEscape: true,
     animation: true,
     centered: true,
+    closeOnRouteChange: true, // Default: true - automatically close on navigation
   });
 
   onModalOpened() {
@@ -232,6 +236,7 @@ export class NestedModalExample {}
       [centered]="true"
       [scrollable]="true"
       [animation]="true"
+      [closeOnRouteChange]="false"
       customClass="my-custom-modal"
     >
       <ng-template #modalHeader>
@@ -239,6 +244,7 @@ export class NestedModalExample {}
       </ng-template>
       <ng-template #modalBody>
         <p>This modal has custom configuration!</p>
+        <p>It will NOT close automatically when navigating to another route.</p>
         <button (click)="customModal.close()">Manual Close</button>
       </ng-template>
     </ngx-custom-modal>
@@ -276,8 +282,40 @@ export class OptionsModalExample {
     backdrop: 'dynamic',
     keyboard: true,
     focus: true,
+    closeOnRouteChange: true,
   };
 }
+```
+
+### Route-Aware Modal Configuration
+
+```typescript
+@Component({
+  template: `
+    <!-- Modal that stays open during navigation -->
+    <ngx-custom-modal #persistentModal [closeOnRouteChange]="false">
+      <ng-template #modalHeader>
+        <h2>Persistent Modal</h2>
+      </ng-template>
+      <ng-template #modalBody>
+        <p>This modal will remain open even when you navigate to other pages.</p>
+        <p>Useful for shopping carts, music players, or global notifications.</p>
+      </ng-template>
+    </ngx-custom-modal>
+
+    <!-- Modal that closes on navigation (default behavior) -->
+    <ngx-custom-modal #standardModal>
+      <ng-template #modalHeader>
+        <h2>Standard Modal</h2>
+      </ng-template>
+      <ng-template #modalBody>
+        <p>This modal will automatically close when navigating to other pages.</p>
+        <p>This is the default behavior for better UX.</p>
+      </ng-template>
+    </ngx-custom-modal>
+  `,
+})
+export class RouteAwareModalExample {}
 ```
 
 ## 🔧 API Reference
@@ -298,6 +336,7 @@ export class OptionsModalExample {
 | `backdrop`            | `'static' \| 'dynamic'`        | `'dynamic'` | Backdrop behavior                    |
 | `keyboard`            | `boolean`                      | `true`      | Enable keyboard interactions         |
 | `focus`               | `boolean`                      | `true`      | Enable focus management              |
+| `closeOnRouteChange`  | `boolean`                      | `true`      | Close modal on route navigation      |
 
 ### Events
 
@@ -341,7 +380,59 @@ interface ModalOptions {
   scrollable?: boolean;
   animation?: boolean;
   animationDuration?: number;
+  closeOnRouteChange?: boolean;
 }
+```
+
+## 🔄 Route Change Behavior
+
+### Default Behavior (Recommended)
+
+By default, modals will automatically close when the user navigates to a different route. This provides a better user experience and prevents modals from appearing in unexpected contexts.
+
+```typescript
+// Default behavior - modal closes on navigation
+<ngx-custom-modal #modal>
+  <!-- Modal content -->
+</ngx-custom-modal>
+
+// Explicitly enabled
+<ngx-custom-modal #modal [closeOnRouteChange]="true">
+  <!-- Modal content -->
+</ngx-custom-modal>
+```
+
+### Persistent Modals
+
+For specific use cases where you want the modal to persist across route changes (shopping carts, media players, global notifications), you can disable this behavior:
+
+```typescript
+// Modal persists across route changes
+<ngx-custom-modal #modal [closeOnRouteChange]="false">
+  <!-- Modal content -->
+</ngx-custom-modal>
+
+// Via options object
+modalOptions: ModalOptions = {
+  closeOnRouteChange: false,
+  // other options...
+};
+```
+
+### Migration from Previous Versions
+
+If you're upgrading from a previous version and have modals that were designed to persist across routes, you'll need to explicitly set `closeOnRouteChange: false`:
+
+```typescript
+// Before v20.0.0 (modals persisted by default)
+<ngx-custom-modal #modal>
+  <!-- Modal content -->
+</ngx-custom-modal>
+
+// After v20.0.0 (to maintain same behavior)
+<ngx-custom-modal #modal [closeOnRouteChange]="false">
+  <!-- Modal content -->
+</ngx-custom-modal>
 ```
 
 ## 🎨 Styling

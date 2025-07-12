@@ -1,3 +1,5 @@
+// ./projects/ngx-custom-modal/src/lib/ngx-custom-modal.component.ts
+
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -17,6 +19,8 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { ModalOptions, ModalState } from './modal-options.interface';
 import { NgxModalStackService } from './ngx-modal-stack.service';
 import { LifecycleCompatibilityService } from './compatibility/lifecycle-compatibility.service';
@@ -32,6 +36,7 @@ import { LifecycleCompatibilityService } from './compatibility/lifecycle-compati
  * - Touch-optimized for mobile devices
  * - Customizable animations and styling
  * - Cross-version compatibility (Angular 17-20+)
+ * - Automatic route change detection and modal closing
  *
  * @example
  * ```html
@@ -59,6 +64,7 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private document = inject(Document, { optional: true });
   private lifecycleService = inject(LifecycleCompatibilityService);
+  private router = inject(Router, { optional: true });
 
   @ViewChild('modalDialog', { static: false }) modalDialog!: ElementRef<HTMLDialogElement>;
 
@@ -107,6 +113,9 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
   /** Enable automatic focus management. @default true */
   @Input() focus = true;
 
+  /** Close modal automatically when navigating to a different route. @default true */
+  @Input() closeOnRouteChange = true;
+
   /** Emitted when modal starts opening */
   @Output() opened = new EventEmitter<void>();
 
@@ -128,6 +137,7 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
 
   private animationDuration = signal<number>(200);
   private modalStack = signal<NgxCustomModalComponent[]>([]);
+  private routerSubscription?: Subscription;
 
   /** Computed signal for modal visibility state */
   visible = computed(() => this.modalState().isVisible);
@@ -174,6 +184,7 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.registerInModalStack();
     this.logVersionInfo();
+    this.setupRouteChangeSubscription();
   }
 
   ngOnDestroy(): void {
@@ -182,6 +193,7 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
     this.restoreFocus();
     this.removeBodyClass();
     this.cleanupLifecycleHooks();
+    this.cleanupRouteSubscription();
   }
 
   /**
@@ -400,6 +412,37 @@ export class NgxCustomModalComponent implements OnInit, OnDestroy {
    */
   hasFooterContent(): boolean {
     return !!this.footer;
+  }
+
+  /**
+   * Sets up route change subscription to auto-close modal on navigation.
+   * @private
+   */
+  private setupRouteChangeSubscription(): void {
+    if (!this.router) return;
+
+    const shouldCloseOnRouteChange = this.options.closeOnRouteChange ?? this.closeOnRouteChange;
+
+    if (shouldCloseOnRouteChange) {
+      this.routerSubscription = this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe(() => {
+          if (this.visible()) {
+            this.close();
+          }
+        });
+    }
+  }
+
+  /**
+   * Cleans up route change subscription.
+   * @private
+   */
+  private cleanupRouteSubscription(): void {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+      this.routerSubscription = undefined;
+    }
   }
 
   /**
