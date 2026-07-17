@@ -1,6 +1,6 @@
 // projects/example/src/app/components/examples/examples-header/examples-header.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { StyleMode } from '../../../services/style-toggle.service';
 import { BootstrapGuideComponent } from '../bootstrap-guide/bootstrap-guide.component';
 import { CustomStylesGuideComponent } from '../custom-styles-guide/custom-styles-guide.component';
@@ -8,7 +8,7 @@ import { CustomStylesGuideComponent } from '../custom-styles-guide/custom-styles
 @Component({
   selector: 'app-examples-header',
   standalone: true,
-  imports: [CommonModule, BootstrapGuideComponent, CustomStylesGuideComponent],
+  imports: [BootstrapGuideComponent, CustomStylesGuideComponent],
   template: `
     <div class="text-center mb-8 sm:mb-16 animate-fadeIn">
       <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">

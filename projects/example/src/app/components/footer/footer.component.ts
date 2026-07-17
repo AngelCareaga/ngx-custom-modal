@@ -1,11 +1,10 @@
 // projects/example/src/app/components/footer/footer.component.ts
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
       <div class="max-w-7xl mx-auto px-4 py-8 sm:py-12 sm:px-6 lg:px-8">

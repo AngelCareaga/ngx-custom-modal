@@ -1,12 +1,12 @@
 // projects/example/src/app/components/examples/demo-section/demo-section.component.ts
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { CodeToggleService } from '../../../services/code-toggle.service';
 
 @Component({
   selector: 'app-demo-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-lg border border-gray-200 dark:border-gray-800 hover:-translate-y-1 transition-all duration-300 animate-fadeIn"

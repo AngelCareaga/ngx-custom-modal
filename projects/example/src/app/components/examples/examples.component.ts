@@ -1,6 +1,6 @@
 // projects/example/src/app/components/examples/examples.component.ts
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ExamplesHeaderComponent } from './examples-header/examples-header.component';
 import { DemoSectionComponent } from './demo-section/demo-section.component';
 import { ApiDocumentationComponent } from './api-documentation/api-documentation.component';
@@ -18,7 +18,6 @@ import { ADVANCED_EXAMPLES } from '../../config/advanced-examples.config';
   selector: 'app-examples',
   standalone: true,
   imports: [
-    CommonModule,
     ExamplesHeaderComponent,
     DemoSectionComponent,
     ApiDocumentationComponent,

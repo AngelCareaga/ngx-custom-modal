@@ -1,12 +1,12 @@
 // projects/example/src/app/components/examples/implementation-guide/implementation-guide.component.ts
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { StyleMode } from '../../../services/style-toggle.service';
 
 @Component({
   selector: 'app-implementation-guide',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="mt-16 animate-fade-in">
       <div class="card-modern p-8 max-w-6xl mx-auto">
@@ -89,15 +89,17 @@ import { StyleMode } from '../../../services/style-toggle.service';
                   </div>
                 </div>
 
-                <div *ngIf="currentStyle === 'bootstrap'">
-                  <p class="font-medium mb-2">2. Add Bootstrap CSS:</p>
-                  <div
-                    class="bg-white dark:bg-neutral-900 rounded p-3 font-mono text-xs border border-green-200 dark:border-green-700"
-                  >
-                    <div class="text-blue-600">npm install bootstrap</div>
-                    <div class="text-neutral-500 mt-1">// Add to angular.json styles array</div>
+                @if (currentStyle === 'bootstrap') {
+                  <div>
+                    <p class="font-medium mb-2">2. Add Bootstrap CSS:</p>
+                    <div
+                      class="bg-white dark:bg-neutral-900 rounded p-3 font-mono text-xs border border-green-200 dark:border-green-700"
+                    >
+                      <div class="text-blue-600">npm install bootstrap</div>
+                      <div class="text-neutral-500 mt-1">// Add to angular.json styles array</div>
+                    </div>
                   </div>
-                </div>
+                }
 
                 <div>
                   <p class="font-medium mb-2">{{ currentStyle === 'bootstrap' ? '3' : '2' }}. Import in component:</p>
@@ -141,18 +143,19 @@ import { StyleMode } from '../../../services/style-toggle.service';
           <h4 class="text-heading text-neutral-900 dark:text-neutral-50 mb-6 text-center">🔧 Key Features</h4>
 
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div
-              *ngFor="let feature of features"
-              class="bg-neutral-50 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-200 dark:border-neutral-800"
-            >
-              <h5 class="font-semibold text-neutral-900 dark:text-neutral-100 mb-3">
-                {{ feature.icon }} {{ feature.title }}
-              </h5>
-              <p class="text-small text-muted mb-3">{{ feature.description }}</p>
-              <div class="bg-neutral-100 dark:bg-neutral-800 rounded p-2 text-xs font-mono">
-                {{ feature.example }}
+            @for (feature of features; track feature) {
+              <div
+                class="bg-neutral-50 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-200 dark:border-neutral-800"
+              >
+                <h5 class="font-semibold text-neutral-900 dark:text-neutral-100 mb-3">
+                  {{ feature.icon }} {{ feature.title }}
+                </h5>
+                <p class="text-small text-muted mb-3">{{ feature.description }}</p>
+                <div class="bg-neutral-100 dark:bg-neutral-800 rounded p-2 text-xs font-mono">
+                  {{ feature.example }}
+                </div>
               </div>
-            </div>
+            }
           </div>
         </div>
 
@@ -164,35 +167,37 @@ import { StyleMode } from '../../../services/style-toggle.service';
             <div>
               <h5 class="font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Input Properties</h5>
               <div class="space-y-3">
-                <div
-                  *ngFor="let option of configOptions"
-                  class="bg-neutral-50 dark:bg-neutral-900 rounded p-4 border border-neutral-200 dark:border-neutral-800"
-                >
-                  <code
-                    class="text-sm font-mono bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded text-primary-600 dark:text-primary-400"
+                @for (option of configOptions; track option) {
+                  <div
+                    class="bg-neutral-50 dark:bg-neutral-900 rounded p-4 border border-neutral-200 dark:border-neutral-800"
                   >
-                    {{ option.name }}
-                  </code>
-                  <span class="text-small text-muted ml-2">{{ option.type }}</span>
-                  <p class="text-small text-neutral-700 dark:text-neutral-300 mt-2">{{ option.description }}</p>
-                </div>
+                    <code
+                      class="text-sm font-mono bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded text-primary-600 dark:text-primary-400"
+                    >
+                      {{ option.name }}
+                    </code>
+                    <span class="text-small text-muted ml-2">{{ option.type }}</span>
+                    <p class="text-small text-neutral-700 dark:text-neutral-300 mt-2">{{ option.description }}</p>
+                  </div>
+                }
               </div>
             </div>
 
             <div>
               <h5 class="font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Template References</h5>
               <div class="space-y-3">
-                <div
-                  *ngFor="let template of templateRefs"
-                  class="bg-neutral-50 dark:bg-neutral-900 rounded p-4 border border-neutral-200 dark:border-neutral-800"
-                >
-                  <code
-                    class="text-sm font-mono bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded text-green-600 dark:text-green-400"
+                @for (template of templateRefs; track template) {
+                  <div
+                    class="bg-neutral-50 dark:bg-neutral-900 rounded p-4 border border-neutral-200 dark:border-neutral-800"
                   >
-                    {{ template.name }}
-                  </code>
-                  <p class="text-small text-neutral-700 dark:text-neutral-300 mt-2">{{ template.description }}</p>
-                </div>
+                    <code
+                      class="text-sm font-mono bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded text-green-600 dark:text-green-400"
+                    >
+                      {{ template.name }}
+                    </code>
+                    <p class="text-small text-neutral-700 dark:text-neutral-300 mt-2">{{ template.description }}</p>
+                  </div>
+                }
               </div>
             </div>
           </div>
@@ -208,76 +213,77 @@ import { StyleMode } from '../../../services/style-toggle.service';
             <div>
               <h5 class="font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-green-600">✅ Do's</h5>
               <ul class="space-y-2 text-small text-neutral-700 dark:text-neutral-300">
-                <li *ngFor="let practice of bestPractices.dos" class="flex items-start space-x-2">
-                  <span class="text-green-500 mt-1">✓</span>
-                  <span>{{ practice }}</span>
-                </li>
+                @for (practice of bestPractices.dos; track practice) {
+                  <li class="flex items-start space-x-2">
+                    <span class="text-green-500 mt-1">✓</span>
+                    <span>{{ practice }}</span>
+                  </li>
+                }
               </ul>
             </div>
 
             <div>
               <h5 class="font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-red-600">❌ Don'ts</h5>
               <ul class="space-y-2 text-small text-neutral-700 dark:text-neutral-300">
-                <li *ngFor="let practice of bestPractices.donts" class="flex items-start space-x-2">
-                  <span class="text-red-500 mt-1">✗</span>
-                  <span>{{ practice }}</span>
-                </li>
+                @for (practice of bestPractices.donts; track practice) {
+                  <li class="flex items-start space-x-2">
+                    <span class="text-red-500 mt-1">✗</span>
+                    <span>{{ practice }}</span>
+                  </li>
+                }
               </ul>
             </div>
           </div>
         </div>
 
         <!-- Migration Guide (optional) -->
-        <div
-          *ngIf="showMigrationGuide"
-          class="mt-12 bg-amber-50 dark:bg-amber-950 rounded-lg p-8 border border-amber-200 dark:border-amber-800"
-        >
-          <h4 class="text-heading text-amber-800 dark:text-amber-200 mb-6 flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              ></path>
-            </svg>
-            Migration from Other Libraries
-          </h4>
-
-          <div class="space-y-6">
-            <div>
-              <h5 class="font-semibold text-amber-800 dark:text-amber-200 mb-3">From ng-bootstrap Modal:</h5>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div>
-                  <p class="text-small font-medium text-amber-700 dark:text-amber-300 mb-2">Before:</p>
-                  <div
-                    class="bg-white dark:bg-neutral-900 rounded p-3 text-xs font-mono border border-amber-200 dark:border-amber-700"
-                  >
-                    this.modalService.open(MyComponent)
+        @if (showMigrationGuide) {
+          <div class="mt-12 bg-amber-50 dark:bg-amber-950 rounded-lg p-8 border border-amber-200 dark:border-amber-800">
+            <h4 class="text-heading text-amber-800 dark:text-amber-200 mb-6 flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                ></path>
+              </svg>
+              Migration from Other Libraries
+            </h4>
+            <div class="space-y-6">
+              <div>
+                <h5 class="font-semibold text-amber-800 dark:text-amber-200 mb-3">From ng-bootstrap Modal:</h5>
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <p class="text-small font-medium text-amber-700 dark:text-amber-300 mb-2">Before:</p>
+                    <div
+                      class="bg-white dark:bg-neutral-900 rounded p-3 text-xs font-mono border border-amber-200 dark:border-amber-700"
+                    >
+                      this.modalService.open(MyComponent)
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <p class="text-small font-medium text-amber-700 dark:text-amber-300 mb-2">After:</p>
-                  <div
-                    class="bg-white dark:bg-neutral-900 rounded p-3 text-xs font-mono border border-amber-200 dark:border-amber-700"
-                  >
-                    this.modal.open()
+                  <div>
+                    <p class="text-small font-medium text-amber-700 dark:text-amber-300 mb-2">After:</p>
+                    <div
+                      class="bg-white dark:bg-neutral-900 rounded p-3 text-xs font-mono border border-amber-200 dark:border-amber-700"
+                    >
+                      this.modal.open()
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div>
-              <h5 class="font-semibold text-amber-800 dark:text-amber-200 mb-3">Key Differences:</h5>
-              <ul class="text-small text-amber-700 dark:text-amber-300 space-y-1">
-                <li>• Template-based approach instead of service injection</li>
-                <li>• Better support for nested modals</li>
-                <li>• No need for entry components</li>
-                <li>• More straightforward component lifecycle</li>
-              </ul>
+              <div>
+                <h5 class="font-semibold text-amber-800 dark:text-amber-200 mb-3">Key Differences:</h5>
+                <ul class="text-small text-amber-700 dark:text-amber-300 space-y-1">
+                  <li>• Template-based approach instead of service injection</li>
+                  <li>• Better support for nested modals</li>
+                  <li>• No need for entry components</li>
+                  <li>• More straightforward component lifecycle</li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        }
 
         <!-- Toggle Migration Guide -->
         <div class="text-center mt-8">

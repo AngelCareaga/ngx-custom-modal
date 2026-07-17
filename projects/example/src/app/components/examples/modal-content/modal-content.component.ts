@@ -1,11 +1,10 @@
 // projects/example/src/app/components/examples/modal-content/modal-content.component.ts
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-content',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="space-y-6">
       <div class="text-center">

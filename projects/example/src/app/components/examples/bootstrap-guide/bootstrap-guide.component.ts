@@ -1,11 +1,10 @@
 // projects/example/src/app/components/examples/bootstrap-guide/bootstrap-guide.component.ts
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-bootstrap-guide',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="bg-blue-50 dark:bg-blue-950 rounded-lg p-6 border border-blue-200 dark:border-blue-800">
       <div class="flex items-center space-x-3 mb-4">
