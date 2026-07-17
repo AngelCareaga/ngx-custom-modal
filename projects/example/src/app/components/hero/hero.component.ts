@@ -1,11 +1,10 @@
 // projects/example/src/app/components/hero/hero.component.ts
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-8 sm:py-16 px-4 sm:px-6 lg:px-8 animate-fadeIn">
       <div class="max-w-6xl mx-auto">

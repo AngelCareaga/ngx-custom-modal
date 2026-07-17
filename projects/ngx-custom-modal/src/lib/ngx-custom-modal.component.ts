@@ -35,7 +35,7 @@ import { LifecycleCompatibilityService } from './compatibility/lifecycle-compati
  * - Bootstrap 3, 4 & 5 compatibility
  * - Touch-optimized for mobile devices
  * - Customizable animations and styling
- * - Cross-version compatibility (Angular 17-20+)
+ * - Cross-version compatibility (Angular 17-21+)
  * - Automatic route change detection and modal closing
  *
  * @example

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 // Import API configurations
 import {
@@ -14,7 +13,7 @@ import {
 @Component({
   selector: 'app-api-documentation',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="mt-16 animate-fade-in">
       <div class="card-modern p-8 max-w-6xl mx-auto">

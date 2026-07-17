@@ -1,11 +1,10 @@
 // projects/example/src/app/components/examples/custom-styles-guide/custom-styles-guide.component.ts
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-custom-styles-guide',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="bg-purple-50 dark:bg-purple-950 rounded-lg p-6 border border-purple-200 dark:border-purple-800">
       <div class="flex items-center space-x-3 mb-4">
